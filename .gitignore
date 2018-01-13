@@ -1,9 +1,21 @@
+
 .idea
 venv/
 *.JPEG
 *.npy
 *.npz
 /data/
+
+
+.DS_Store
+.idea
+data/
+venv/
+.png
+.JPEG
+.txt
+
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
