@@ -8,7 +8,7 @@ and the service will run on http://0.0.0.0:3000/.
 
 We have prepared the data in the "./data/allImage" folder. If you have any question, please contact me at llluocj@gmail.com. 
 
-The codes cite the following papers: 
+The codes refer to the following papers: 
 
 [1]  Li He, Xing Xu, Huimin Lu, Yang Yang, Fumin Shen and Heng Tao Shen.  "Unsupervised Cross-modal Retrieval through Adversarial Learning". IEEE International Conference on Multimedia and Expo (ICME), 2017. 
 
