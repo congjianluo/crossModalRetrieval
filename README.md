@@ -1,6 +1,6 @@
 # A demo of a cross-modal retrieval system
 
-This is a corss-modal retrieval system by using Flask, which is a microframework for Python.
+This is a corss-modal retrieval system by using Flask, which is a microframework for Python.And I will keep updating it.
 
 You can run this system:
  `python app.py`
