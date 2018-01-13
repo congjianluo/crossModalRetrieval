@@ -1,18 +1,10 @@
 
+.DS_Store
 .idea
-venv/
+*.txt
 *.JPEG
 *.npy
 *.npz
-
-
-.DS_Store
-.idea
-data/
-venv/
-.png
-.JPEG
-.txt
 
 
 
