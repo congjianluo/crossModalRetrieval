@@ -4,7 +4,6 @@ venv/
 *.JPEG
 *.npy
 *.npz
-/data/
 
 
 .DS_Store
