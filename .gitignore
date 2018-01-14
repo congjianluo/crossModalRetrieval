@@ -5,6 +5,7 @@
 *.JPEG
 *.npy
 *.npz
+*.png
 
 
 
