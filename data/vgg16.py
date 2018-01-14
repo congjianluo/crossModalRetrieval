@@ -184,7 +184,8 @@ def searchImage(img):
                                  str(j) + '.png'))  # r'..\static\img\large' + '\\' + str(j) + r'.png'
         shutil.copy(os.path.join('./data/allImage', str(i + 1) + '.JPEG'),
                     os.path.join('./static/img/thumb',
-                                 str(j) + '.png'))  # r'..\wamp64\www\searchImage\static\img\thumb' + '\\' + str(j) + r'.png'
+                                 str(
+                                     j) + '.png'))  # r'..\wamp64\www\searchImage\static\img\thumb' + '\\' + str(j) + r'.png'
         j += 1
 
 
