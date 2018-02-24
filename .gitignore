@@ -8,6 +8,7 @@
 *.png
 *.jpg
 
+static/img/
 uploads/
 /inception/
 
