@@ -6,9 +6,10 @@
 *.npy
 *.npz
 *.png
+*.jpg
 
+uploads/
 /inception/
-inception/*.txt
 
 
 

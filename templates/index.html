@@ -122,7 +122,8 @@
     }).on('fileuploaded', function (event, data) {
         $('#kv-success-box').append(data.response.link);
         $('#kv-success-modal').modal('show');
-        window.location.href = '/result';
+        // console.log(data.response.success);
+        window.location.href = '/result?id=' + data.response.success;
     });
 
 </script>

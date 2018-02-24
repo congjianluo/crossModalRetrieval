@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import uuid
 
 from data.vgg16 import run_vgg16
 from inception.label_image import get_img_labels
@@ -21,7 +22,12 @@ def index():
 
 @app.route('/result')
 def result():
-    run_vgg16(),
+    search_id = request.args["id"]
+    print(search_id)
+    ret = get_img_labels(search_id + ".jpg")
+    if ret is False:
+        return make_response("非法请求")
+    # run_vgg16(),
     return render_template('result.html')
 
 
@@ -38,9 +44,9 @@ def upload_file():
     if request.method == 'POST':
         file = request.files['input-image']
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join('./uploads', 'new.jpg'))
-            return jsonify({'success': 'chenggong'})
+            filename = str(uuid.uuid1())  # secure_filename(file.filename)
+            file.save(os.path.join('./uploads', filename + ".jpg"))
+            return jsonify({'success': filename})
     return jsonify({'fail': 'shibai'})
 
 
