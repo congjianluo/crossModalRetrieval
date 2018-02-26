@@ -5,7 +5,7 @@ import tensorflow as tf
 
 from inception.label_image import get_img_labels
 from data.vgg16 import run_vgg16
-from model.imgInf import create_new_img_inf, init_all_table
+from model.imgInf import create_new_img_inf, init_all_table, select_img_inf
 
 from flask import Flask, json, send_from_directory
 from flask import render_template
@@ -29,7 +29,7 @@ def index():
 def result():
     search_id = request.args["id"]
     print(search_id)
-    run_vgg16(sess, search_id + ".jpg")
+    # run_vgg16(sess, search_id + ".jpg")
     ret = get_img_labels(sess, search_id + ".jpg")
     if ret is False:
         return make_response("非法请求")
@@ -62,6 +62,21 @@ def search_img():
         return make_response("success")
     except Exception:
         return make_response("fail", 400)
+
+
+@app.route("/txt2img_ret")
+def txt2img_ret():
+    query_txt = request.args["query"]
+    all_query = ["desert", "mountains", "sea", "sunset", "trees"]
+    query_list = query_txt.split(" ")
+    for query in query_list:
+        if query not in all_query:
+            query_list.remove(query)
+    if len(query_list) > 0:
+        imgs = select_img_inf(query_list)
+        return render_template("txt2img.html", imgs=imgs, query_txt=query_txt, query_list=query_list)
+    else:
+        return make_response("该词暂不支持查询～")
 
 
 @app.route("/download/<filename>", methods=['GET'])

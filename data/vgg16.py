@@ -205,5 +205,13 @@ def run_vgg16(sess, filename):
     feature = sess.run(vgg.fc7, feed_dict=feed_dict)
 
     sess.close()
+    del sess
     img = np.append(feature[0], [1])
     searchImage(img)
+
+
+# if __name__ == "__main__":
+#     os.chdir("..")
+#     for i in range(3):
+#         print(i)
+#         run_vgg16("", "new.jpg")

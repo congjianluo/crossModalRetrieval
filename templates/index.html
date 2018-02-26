@@ -66,7 +66,7 @@
 <div class="col-xs-12 col-md-offset-3">
     <div class="col-lg-6">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="在此处输入图片种类......">
+            <input id="query_txt" type="text" class="form-control" placeholder="暂只支持desert mountains sea sunset trees五个种类，以空格隔开">
             <span class="input-group-btn">
                   <button id="input-image-1" type="button" class="btn btn-primary" data-toggle="modal"
                           data-target="#exampleModal" aria-label="Left Align">
@@ -133,12 +133,20 @@
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/static/js/bootstrap.min.js"></script>
 <script>
+    document.onkeydown = cdk;
+
+    function cdk() {
+        if (event.keyCode === 13) {
+            document.getElementById('search_img').click()
+        }
+    }
+
     $("#search_img").click(function () {
-        $.post("search_img", {query_str: "test"}, function (data) {
-            alert(data);
-        }).error(function (res) {
-            alert("请求出错，错误信息: " + res.responseText);
-        });
+        //$.post("search_img", {query_str: "test"}, function (data) {
+        //  alert(data);
+        //});
+        var query_txt = document.getElementById("query_txt").value;
+        window.location.href = "txt2img_ret?query=" + query_txt
     })
 </script>
 </body>
