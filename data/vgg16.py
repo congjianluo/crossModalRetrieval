@@ -189,20 +189,21 @@ def searchImage(img):
         j += 1
 
 
-def run_vgg16():
-    img = utils.load_image(os.path.join('./uploads', 'new.jpg'))
+def run_vgg16(sess, filename):
+    img = utils.load_image(os.path.join('./uploads', filename))
     batch = img.reshape((1, 224, 224, 3))
 
     # with tf.Session(config=tf.ConfigProto(gpu_options=(tf.GPUOptions(per_process_gpu_memory_fraction=0.7)))) as sess:
-    with tf.device('/cpu:0'):
-        with tf.Session() as sess:
-            images = tf.placeholder("float", [1, 224, 224, 3])
-            feed_dict = {images: batch}
+    sess = tf.Session()
 
-            vgg = Vgg16()
-            with tf.name_scope("content_vgg"):
-                vgg.build(images)
-            feature = sess.run(vgg.fc7, feed_dict=feed_dict)
+    images = tf.placeholder("float", [1, 224, 224, 3])
+    feed_dict = {images: batch}
 
+    vgg = Vgg16()
+    with tf.name_scope("content_vgg"):
+        vgg.build(images)
+    feature = sess.run(vgg.fc7, feed_dict=feed_dict)
+
+    sess.close()
     img = np.append(feature[0], [1])
     searchImage(img)

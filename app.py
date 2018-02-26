@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
 import uuid
+import tensorflow as tf
 
-from data.vgg16 import run_vgg16
 from inception.label_image import get_img_labels
+from data.vgg16 import run_vgg16
+from model.imgInf import create_new_img_inf, init_all_table
 
-from flask import Flask
+from flask import Flask, json, send_from_directory
 from flask import render_template
 from flask import request
 from flask import jsonify
@@ -13,6 +15,9 @@ from flask import make_response
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+
+with tf.Session() as se:
+    sess = se
 
 
 @app.route('/')
@@ -24,11 +29,11 @@ def index():
 def result():
     search_id = request.args["id"]
     print(search_id)
-    ret = get_img_labels(search_id + ".jpg")
+    run_vgg16(sess, search_id + ".jpg")
+    ret = get_img_labels(sess, search_id + ".jpg")
     if ret is False:
         return make_response("非法请求")
-    # run_vgg16(),
-    return render_template('result.html')
+    return render_template('result.html', ret=json.dumps(ret), img_id=search_id)
 
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -59,5 +64,20 @@ def search_img():
         return make_response("fail", 400)
 
 
+@app.route("/download/<filename>", methods=['GET'])
+def download_file(filename):
+    # 需要知道2个参数, 第1个参数是本地目录的path, 第2个参数是文件名(带扩展名)
+    directory = "uploads"
+    try:
+        return send_from_directory(directory, filename, as_attachment=True)
+    except Exception:
+        return send_from_directory(directory, "new.jpg", as_attachment=True)
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=3000, debug=True)
+    # init_all_table()
+
+    # for i in range(2000):
+    #     ret = get_img_labels(sess, "../static/multi-label/" + str(i + 1) + ".jpg")
+    #     create_new_img_inf(i + 1, ret["desert"], ret["mountains"], ret["sea"], ret["sunset"], ret["trees"])

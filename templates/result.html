@@ -2,275 +2,304 @@
 
 <html lang="en" class="no-js">
 
-	<head>
+<head>
 
-		<meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
 
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<title>Blueprint: Google Grid Gallery</title>
+    <title>Blueprint: Google Grid Gallery</title>
 
-		<meta name="description" content="Blueprint: Blueprint: Google Grid Gallery" />
+    <meta name="description" content="Blueprint: Blueprint: Google Grid Gallery"/>
 
-		<meta name="keywords" content="google getting started gallery, image gallery, image grid, template, masonry" />
+    <meta name="keywords" content="google getting started gallery, image gallery, image grid, template, masonry"/>
 
-		<meta name="author" content="Codrops" />
+    <meta name="author" content="Codrops"/>
 
-		<link rel="shortcut icon" href="/static/images/favicon.ico">
+    <link rel="shortcut icon" href="/static/images/favicon.ico">
 
-		<link rel="stylesheet" type="text/css" href="/static/css/demo.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/demo.css"/>
 
-		<link rel="stylesheet" type="text/css" href="/static/css/component.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/component.css"/>
 
-		<script src="/static/js/modernizr.custom.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/result.css"/>
 
-	</head>
+    <script src="/static/js/modernizr.custom.js"></script>
 
-	<body>
+</head>
 
-		<div class="container">
+<body>
 
-			<header class="clearfix">
+<div class="container">
 
-				<span>CFM <span class="bp-icon bp-icon-about" data-content=" 未来媒体研究中心申恒涛教授团队自 2014 年成立以来，除瞄准高水平学术科研工作外，还高度重视创新人才培养工作。中心全体教师均承担本科和研究生教学，在培养学生从事高水平科研“硬实力”的同时，通过“听说读写”新四会能力的培养提升学生的“软实力”，助力培育具有跨界交叉融合、集成创新能力，具有国际视野的创新拔尖人才。三年来，团队培养优秀研究生 76 余人，其中包括博士生 9 人，硕士研究生共 67 人。"></span></span>
+    <header class="clearfix">
 
+        <span>CFM <span class="bp-icon bp-icon-about"
+                        data-content=" 未来媒体研究中心申恒涛教授团队自 2014 年成立以来，除瞄准高水平学术科研工作外，还高度重视创新人才培养工作。中心全体教师均承担本科和研究生教学，在培养学生从事高水平科研“硬实力”的同时，通过“听说读写”新四会能力的培养提升学生的“软实力”，助力培育具有跨界交叉融合、集成创新能力，具有国际视野的创新拔尖人才。三年来，团队培养优秀研究生 76 余人，其中包括博士生 9 人，硕士研究生共 67 人。"></span></span>
+        <h1>检索结果</h1>
 
-				<h1>检索结果</h1>
+    </header>
 
-			</header>
 
-			<div id="grid-gallery" class="grid-gallery">
+    <div style="height: 200px;max-width: 69em;margin: auto;padding-left: 10%;padding-right: 10%" class="box">
+        <img style="height: 190px;" src="/download/{{ img_id }}.jpg" class="img-thumbnail">
+        <h3 style="">识别结果：</h3>
+        <h3 style="" hidden id="img2txt">{{ ret }}</h3>
+        <h3 style="" id="img2txt_ret"></h3>
+    </div>
 
-				<section class="grid-wrap">
+    <div id="grid-gallery" class="grid-gallery">
 
-					<ul class="grid">
+        <section class="grid-wrap">
 
-						<li class="grid-sizer"></li><!-- for Masonry column width -->
+            <ul class="grid">
 
-						<li>
+                <li class="grid-sizer"></li><!-- for Masonry column width -->
 
-							<figure>
+                <li>
 
-								<img src="/static/img/thumb/1.png" alt="img01"/>
+                    <figure>
 
-								<figcaption><h3>图 1 </h3><p>这个是图 1.</p></figcaption>
+                        <img src="/static/img/thumb/1.png" alt="img01"/>
 
-							</figure>
+                        <figcaption><h3>图 1 </h3>
+                            <p>这个是图 1.</p></figcaption>
 
-						</li>
+                    </figure>
 
-						<li>
+                </li>
 
-							<figure>
+                <li>
 
-								<img src="/static/img/thumb/2.png" alt="img02"/>
+                    <figure>
 
-								<figcaption><h3>图 2</h3><p>这个是图 2. </p></figcaption>
+                        <img src="/static/img/thumb/2.png" alt="img02"/>
 
-							</figure>
+                        <figcaption><h3>图 2</h3>
+                            <p>这个是图 2. </p></figcaption>
 
-						</li>
+                    </figure>
 
-						<li>
+                </li>
 
-							<figure>
+                <li>
 
-								<img src="/static/img/thumb/3.png" alt="img03"/>
+                    <figure>
 
-								<figcaption><h3>图 3</h3><p>这个是图 3.</p></figcaption>
+                        <img src="/static/img/thumb/3.png" alt="img03"/>
 
-							</figure>
+                        <figcaption><h3>图 3</h3>
+                            <p>这个是图 3.</p></figcaption>
 
-						</li>
+                    </figure>
 
-						<li>
+                </li>
 
-							<figure>
+                <li>
 
-								<img src="/static/img/thumb/4.png" alt="img04"/>
+                    <figure>
 
-								<figcaption><h3>图 4</h3><p>这个是图 4. </p></figcaption>
+                        <img src="/static/img/thumb/4.png" alt="img04"/>
 
-							</figure>
+                        <figcaption><h3>图 4</h3>
+                            <p>这个是图 4. </p></figcaption>
 
-						</li>
+                    </figure>
 
-						<li>
+                </li>
 
-							<figure>
+                <li>
 
-								<img src="/static/img/thumb/5.png" alt="img05"/>
+                    <figure>
 
-								<figcaption><h3>图 5</h3><p>这个是图 5. </p></figcaption>
+                        <img src="/static/img/thumb/5.png" alt="img05"/>
 
-							</figure>
+                        <figcaption><h3>图 5</h3>
+                            <p>这个是图 5. </p></figcaption>
 
-						</li>
+                    </figure>
 
-						<li>
+                </li>
 
-							<figure>
+                <li>
 
-								<img src="/static/img/thumb/6.png" alt="img06"/>
+                    <figure>
 
-								<figcaption><h3>图 6</h3><p>这个是图 6.</p></figcaption>
+                        <img src="/static/img/thumb/6.png" alt="img06"/>
 
-							</figure>
+                        <figcaption><h3>图 6</h3>
+                            <p>这个是图 6.</p></figcaption>
 
-						</li>
-					</ul>
+                    </figure>
 
-				</section><!-- // grid-wrap -->
+                </li>
+            </ul>
 
-				<section class="slideshow">
+        </section><!-- // grid-wrap -->
 
-					<ul>
+        <section class="slideshow">
 
-						<li>
+            <ul>
 
-							<figure>
+                <li>
 
-								<figcaption>
+                    <figure>
 
-									<h3>图 1</h3>
+                        <figcaption>
 
-									<p>这个是图 1.</p>
+                            <h3>图 1</h3>
 
-								</figcaption>
+                            <p>这个是图 1.</p>
 
-								<img src="/static/img/large/1.png" alt="img01"/>
+                        </figcaption>
 
-							</figure>
+                        <img src="/static/img/large/1.png" alt="img01"/>
 
-						</li>
+                    </figure>
 
-						<li>
+                </li>
 
-							<figure>
+                <li>
 
-								<figcaption>
+                    <figure>
 
-									<h3>图 2</h3>
+                        <figcaption>
 
-									<p>这个是图 2.</p>
+                            <h3>图 2</h3>
 
-								</figcaption>
+                            <p>这个是图 2.</p>
 
-								<img src="/static/img/large/2.png" alt="img02"/>
+                        </figcaption>
 
-							</figure>
+                        <img src="/static/img/large/2.png" alt="img02"/>
 
-						</li>
+                    </figure>
 
-						<li>
+                </li>
 
-							<figure>
+                <li>
 
-								<figcaption>
+                    <figure>
 
-									<h3>图 3</h3>
+                        <figcaption>
 
-									<p>这个是图 3.</p>
+                            <h3>图 3</h3>
 
-								</figcaption>
+                            <p>这个是图 3.</p>
 
-								<img src="/static/img/large/3.png" alt="img03"/>
+                        </figcaption>
 
-							</figure>
+                        <img src="/static/img/large/3.png" alt="img03"/>
 
-						</li>
+                    </figure>
 
-						<li>
+                </li>
 
-							<figure>
+                <li>
 
-								<figcaption>
+                    <figure>
 
-									<h3>图 4</h3>
+                        <figcaption>
 
-									<p>这个是图 4.</p>
+                            <h3>图 4</h3>
 
-								</figcaption>
+                            <p>这个是图 4.</p>
 
-								<img src="/static/img/large/4.png" alt="img04"/>
+                        </figcaption>
 
-							</figure>
+                        <img src="/static/img/large/4.png" alt="img04"/>
 
-						</li>
+                    </figure>
 
-						<li>
+                </li>
 
-							<figure>
+                <li>
 
-								<figcaption>
+                    <figure>
 
-									<h3>图 5</h3>
+                        <figcaption>
 
-									<p>这个是图 5.</p>
+                            <h3>图 5</h3>
 
-								</figcaption>
+                            <p>这个是图 5.</p>
 
-								<img src="/static/img/large/5.png" alt="img05"/>
+                        </figcaption>
 
-							</figure>
+                        <img src="/static/img/large/5.png" alt="img05"/>
 
-						</li>
+                    </figure>
 
-						<li>
+                </li>
 
-							<figure>
+                <li>
 
-								<figcaption>
+                    <figure>
 
-									<h3>图 6</h3>
+                        <figcaption>
 
-									<p>这个是图 6.</p>
+                            <h3>图 6</h3>
 
-								</figcaption>
+                            <p>这个是图 6.</p>
 
-								<img src="/static/img/large/6.png" alt="img06"/>
+                        </figcaption>
 
-							</figure>
+                        <img src="/static/img/large/6.png" alt="img06"/>
 
-						</li>
+                    </figure>
 
-						
-					</ul>
+                </li>
 
-					<nav>
 
-						<span class="icon nav-prev"></span>
+            </ul>
 
-						<span class="icon nav-next"></span>
+            <nav>
 
-						<span class="icon nav-close"></span>
+                <span class="icon nav-prev"></span>
 
-					</nav>
+                <span class="icon nav-next"></span>
 
-					<div class="info-keys icon">Navigate with arrow keys</div>
+                <span class="icon nav-close"></span>
 
-				</section><!-- // slideshow -->
+            </nav>
 
-			</div><!-- // grid-gallery -->
+            <div class="info-keys icon">Navigate with arrow keys</div>
 
-		</div>
+        </section><!-- // slideshow -->
 
-		<script src="/static/js/imagesloaded.pkgd.min.js"></script>
+    </div><!-- // grid-gallery -->
 
-		<script src="/static/js/masonry.pkgd.min.js"></script>
+</div>
 
-		<script src="/static/js/classie.js"></script>
+<script src="/static/js/imagesloaded.pkgd.min.js"></script>
 
-		<script src="/static/js/cbpGridGallery.js"></script>
+<script src="/static/js/masonry.pkgd.min.js"></script>
 
-		<script>
+<script src="/static/js/classie.js"></script>
 
-			new CBPGridGallery( document.getElementById( 'grid-gallery' ) );
-		</script>
+<script src="/static/js/cbpGridGallery.js"></script>
 
-	</body>
+<script>
+
+    new CBPGridGallery(document.getElementById('grid-gallery'));
+
+    window.onload = function () {
+        var ret = document.getElementById("img2txt").innerHTML;
+        ret = JSON.parse(ret);
+        var txt = "";
+        for (var item in ret) {
+
+            txt += item + ":" + ret[item] + "<br/>";
+        }
+        console.log(txt);
+        document.getElementById("img2txt_ret").innerHTML = txt;
+    };
+
+
+</script>
+
+</body>
 
 </html>
 
