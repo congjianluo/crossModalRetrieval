@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import print_function
 import os, time, cPickle
 import numpy as np
@@ -7,8 +8,6 @@ from random import shuffle
 import sklearn.preprocessing
 from base_model import BaseModel, BaseModelParams, BaseDataIter
 from flip_gradient import flip_gradient
-from acmr_models.db_model.db_wikipedia import get_all_img_feats, get_all_vecs, get_all_label, get_all_wikipedia_dataset
-from acmr_models.knn import get_feats_knn_ret, get_vecs_knn_ret
 
 
 class DataIter(BaseDataIter):
@@ -16,49 +15,6 @@ class DataIter(BaseDataIter):
         BaseDataIter.__init__(self, batch_size)
         self.num_train_batch = 0
         self.num_test_batch = 0
-
-        # with open('./data/wikipedia_dataset/train_img_feats.pkl', 'rb') as f:
-        #     self.train_img_feats = cPickle.load(f)
-        # with open('./data/wikipedia_dataset/train_txt_vecs.pkl', 'rb') as f:
-        #     self.train_txt_vecs = cPickle.load(f)
-        # with open('./data/wikipedia_dataset/train_labels.pkl', 'rb') as f:
-        #     self.train_labels = cPickle.load(f)
-
-        self.train_img_feats = get_all_img_feats()
-        self.train_txt_vecs = get_all_vecs()
-        self.train_labels = get_all_label()
-        # with open('./data/wikipedia_dataset/test_img_feats.pkl', 'rb') as f:
-        #     self.test_img_feats = cPickle.load(f)
-        # with open('./data/wikipedia_dataset/test_txt_vecs.pkl', 'rb') as f:
-        #     self.test_txt_vecs = cPickle.load(f)
-        # with open('./data/wikipedia_dataset/test_labels.pkl', 'rb') as f:
-        #     self.test_labels = cPickle.load(f)
-
-        self.test_img_feats = []
-        self.test_txt_vecs = []
-        self.test_labels = []
-        self.results = get_all_wikipedia_dataset()
-        for item in self.results:
-            self.test_img_feats.append(item["feats"])
-            self.test_txt_vecs.append(item["vecs"])
-            self.test_labels.append(item["label"])
-
-        self.num_train_batch = len(self.train_img_feats) / self.batch_size
-        self.num_test_batch = len(self.test_img_feats) / self.batch_size
-
-    def train_data(self):
-        for i in range(self.num_train_batch):
-            batch_img_feats = self.train_img_feats[i * self.batch_size: (i + 1) * self.batch_size]
-            batch_txt_vecs = self.train_txt_vecs[i * self.batch_size: (i + 1) * self.batch_size]
-            batch_labels = self.train_labels[i * self.batch_size: (i + 1) * self.batch_size]
-            yield batch_img_feats, batch_txt_vecs, batch_labels, i
-
-    def test_data(self):
-        for i in range(self.num_test_batch):
-            batch_img_feats = self.test_img_feats[i * self.batch_size: (i + 1) * self.batch_size]
-            batch_txt_vecs = self.test_txt_vecs[i * self.batch_size: (i + 1) * self.batch_size]
-            batch_labels = self.test_labels[i * self.batch_size: (i + 1) * self.batch_size]
-            yield batch_img_feats, batch_txt_vecs, batch_labels, i
 
 
 class ModelParams(BaseModelParams):
@@ -388,219 +344,19 @@ class AdvCrossModalSimple(BaseModel):
         mean_avg_prec = np.mean(avg_precs)
         print('[Eval - random] mAP: %f in %4.4fs' % (mean_avg_prec, (time.time() - start)))
 
-    def eval(self, sess):
-        # start = time.time()
-
-        test_img_feats_trans = []
-        test_txt_vecs_trans = []
-        test_labels = []
-
-        feats = []
-        with open('./images/feats.pkl', 'rb') as f:
-            feats.append(cPickle.load(f))
-
-        feats_trans = sess.run(self.emb_v, feed_dict={self.visual_feats: feats})
-
-        print(get_feats_knn_ret(feats_trans[0]))
-
+    def eval_vecs(self, sess, text_path):
         vecs = []
         with open('./images/bow.pkl', 'rb') as f:
             vecs.append(cPickle.load(f))
 
         vecs_trans = sess.run(self.emb_w, feed_dict={self.word_vecs: vecs})
+        return vecs_trans[0]
 
-        print(get_vecs_knn_ret(vecs_trans[0]))
-        # all_wikipedia_infos = get_all_wikipedia()
-        #
-        # feats = []
-        # vecs = []
-        # i = 0
-        # for item in all_wikipedia_infos:
-        #     feats.append(np.fromstring(item.feats, dtype=np.float32))
-        #     vecs.append(np.fromstring(item.vecs, dtype=np.float64))
-        #     feats_trans = sess.run(self.emb_v, feed_dict={self.visual_feats: feats})
-        #     vecs_trans = sess.run(self.emb_w, feed_dict={self.word_vecs: vecs})
-        #     feats = []
-        #     vecs = []
-        #     item.feats = feats_trans[0].tostring()  # float32
-        #     item.vecs = vecs_trans[0].tostring()  # float32
-        #     update_wikipedia_info(item)
-        #     i += 1
-        #     print(i)
+    def eval_feats(self, sess, pic_name):
+        feats = []
+        with open('./acmr_models/feats/' + pic_name + '-feats.pkl', 'rb') as f:
+            feats.append(cPickle.load(f))
 
-        # for feats, vecs, labels, i in self.data_iter.test_data():
-        #     feats_trans = sess.run(self.emb_v, feed_dict={self.visual_feats: feats})
-        #     vecs_trans = sess.run(self.emb_w, feed_dict={self.word_vecs: vecs})
-        #     test_labels += labels
-        #     for ii in range(len(feats)):
-        #         test_img_feats_trans.append(feats_trans[ii])
-        #         test_txt_vecs_trans.append(vecs_trans[ii])
-        # test_img_feats_trans = np.asarray(test_img_feats_trans)
-        # test_txt_vecs_trans = np.asarray(test_txt_vecs_trans)
-        # test_feats_trans = np.concatenate((test_img_feats_trans[0:1000], test_txt_vecs_trans[-1000:]))
-        # # with open('./data/wikipedia_dataset/test_feats_transformed.pkl', 'wb') as f:
-        # #    cPickle.dump(test_feats_trans, f, cPickle.HIGHEST_PROTOCOL)
-        # with open('./data/wiki_shallow/test_feats_transformed.pkl', 'wb') as f:
-        #     cPickle.dump(test_feats_trans, f, cPickle.HIGHEST_PROTOCOL)
-        # print('[Eval] transformed test features in %4.4f' % (time.time() - start))
-        # # k = self.model_params.top_k
-        # avg_precs = []
-        # all_precs = []
-        # # all_k = [5,50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,950,1000]
-        # all_k = [50]
-        # for k in all_k:
-        #     for i in range(len(test_txt_vecs_trans)):
-        #         query_label = test_labels[i]
-        #
-        #         # distances and sort by distances
-        #         wv = test_txt_vecs_trans[i]
-        #         diffs = test_img_feats_trans - wv
-        #         dists = np.linalg.norm(diffs, axis=1)
-        #         sorted_idx = np.argsort(dists)
-        #
-        #         # for each k do top-k
-        #         precs = []
-        #         for topk in range(1, k + 1):
-        #             hits = 0
-        #             top_k = sorted_idx[0: topk]
-        #             if np.sum(query_label) != test_labels[top_k[-1]]:
-        #                 continue
-        #             for ii in top_k:
-        #                 retrieved_label = test_labels[ii]
-        #                 if np.sum(retrieved_label) == query_label:
-        #                     hits += 1
-        #             precs.append(float(hits) / float(topk))
-        #         if len(precs) == 0:
-        #             precs.append(0)
-        #         avg_precs.append(np.average(precs))
-        #     mean_avg_prec = np.mean(avg_precs)
-        #     all_precs.append(mean_avg_prec)
-        # print('[Eval - txt2img] mAP: %f in %4.4fs' % (all_precs[0], (time.time() - start)))
-        # t2i = all_precs[0]
-        # # with open('./data/wikipedia_dataset/txt2img_all_precision.pkl', 'wb') as f:
-        # #    cPickle.dump(all_precs, f, cPickle.HIGHEST_PROTOCOL)
-        # with open('./data/wiki_shallow/txt2img_all_precision.pkl', 'wb') as f:
-        #     cPickle.dump(all_precs, f, cPickle.HIGHEST_PROTOCOL)
-        #
-        # avg_precs = []
-        # all_precs = []
-        # # all_k = [5,50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,950,1000]
-        # all_k = [50]
-        # for k in all_k:
-        #     for i in range(len(test_img_feats_trans)):
-        #         query_img_feat = test_img_feats_trans[i]
-        #         ground_truth_label = test_labels[i]
-        #
-        #         # calculate distance and sort
-        #         diffs = test_txt_vecs_trans - query_img_feat
-        #         dists = np.linalg.norm(diffs, axis=1)
-        #         sorted_idx = np.argsort(dists)
-        #
-        #         # for each k in top-k
-        #         precs = []
-        #         for topk in range(1, k + 1):
-        #             hits = 0
-        #             top_k = sorted_idx[0: topk]
-        #             if np.sum(ground_truth_label) != test_labels[top_k[-1]]:
-        #                 continue
-        #             for ii in top_k:
-        #                 retrieved_label = test_labels[ii]
-        #                 if np.sum(ground_truth_label) == retrieved_label:
-        #                     hits += 1
-        #             precs.append(float(hits) / float(topk))
-        #         if len(precs) == 0:
-        #             precs.append(0)
-        #         avg_precs.append(np.average(precs))
-        #     mean_avg_prec = np.mean(avg_precs)
-        #     all_precs.append(mean_avg_prec)
-        # print('[Eval - img2txt] mAP: %f in %4.4fs' % (all_precs[0], (time.time() - start)))
-        #
-        # # with open('./data/wikipedia_dataset/text_words_map.pkl', 'wb') as f:
-        # #    cPickle.dump(all_precs, f, cPickle.HIGHEST_PROTOCOL)
-        # with open('./data/wiki_shallow/text_words_map.pkl', 'wb') as f:
-        #     cPickle.dump(all_precs, f, cPickle.HIGHEST_PROTOCOL)
-        #     # Text query
-        #
-        # # with open('./data/wikipedia_dataset/text_words_map.pkl', 'rb') as f:
-        # #    txt_words = cPickle.load(f)
-        # # with open('./data/wikipedia_dataset/test_img_words.pkl', 'rb') as f:
-        # #    img_words = cPickle.load(f)
-        # # with open('./data/wikipedia_dataset/test_txt_files.pkl', 'rb') as f:
-        # #    test_txt_names = cPickle.load(f)
-        # # with open('./data/wikipedia_dataset/test_img_files.pkl', 'rb') as f:
-        # #    test_img_names = cPickle.load(f)
-        # with open('./data/wikipedia_dataset/text_words_map.pkl', 'rb') as f:
-        #     txt_words = cPickle.load(f)
-        # with open('./data/wikipedia_dataset/test_img_words.pkl', 'rb') as f:
-        #     img_words = cPickle.load(f)
-        # with open('./data/wikipedia_dataset/test_txt_files.pkl', 'rb') as f:
-        #     test_txt_names = cPickle.load(f)
-        # with open('./data/wikipedia_dataset/test_img_files.pkl', 'rb') as f:
-        #     test_img_names = cPickle.load(f)
-        #     # Precision-scope for text query
-        # scope = 100
-        # retrieval_results = []
-        # precisions = np.zeros(scope)
-        # for i in range(len(test_txt_vecs_trans)):
-        #     query_words = img_words[test_img_names[i]]
-        #
-        #     # distances and sort by distances
-        #     wv = test_txt_vecs_trans[i]
-        #     diffs = test_img_feats_trans - wv
-        #     dists = np.linalg.norm(diffs, axis=1)
-        #     sorted_idx = np.argsort(dists)
-        #
-        #     hits = np.zeros(scope)
-        #     p = np.zeros(scope)
-        #     for k in range(scope):
-        #         retrieved = img_words[test_img_names[sorted_idx[k]]]
-        #         if utils.is_text_relevant(query_words, retrieved, None):
-        #             hits[k] = 1.0
-        #     for k in range(scope):
-        #         p[k] = np.sum(hits[0:k]) / float(k + 1)
-        #     precisions += p
-        #
-        #     if i in sorted_idx[0:5] and np.sum(hits[0:5]) >= 4:
-        #         result = {
-        #             'query': test_txt_names[i],
-        #             'retrieval': [test_img_names[hh] for hh in sorted_idx[0:5]]
-        #         }
-        #         retrieval_results.append(result)
-        #
-        # with open('./data/wikipedia_dataset/txt2img-retrievals.pkl', 'wb') as f:
-        #     cPickle.dump(retrieval_results, f, cPickle.HIGHEST_PROTOCOL)
-        # print('[Eval - txt2img] finished precision-scope in %4.4fs' % (time.time() - start))
-        #
-        # # Precision-scope for image query
-        # retrieval_results = []
-        # precisions = np.zeros(scope)
-        # for i in range(len(test_img_feats_trans)):
-        #     query_img_feat = test_img_feats_trans[i]
-        #     query_img_name = test_img_names[i]
-        #     ground_truth_words = img_words[query_img_name]
-        #
-        #     # calculate distance and sort
-        #     diffs = test_txt_vecs_trans - query_img_feat
-        #     dists = np.linalg.norm(diffs, axis=1)
-        #     sorted_idx = np.argsort(dists)
-        #
-        #     hits = np.zeros(scope)
-        #     p = np.zeros(scope)
-        #     for k in range(scope):
-        #         retrieved = img_words[test_img_names[sorted_idx[k]]]
-        #         if utils.is_text_relevant(retrieved, ground_truth_words, None):
-        #             hits[k] = 1.0
-        #     for k in range(scope):
-        #         p[k] = np.sum(hits[0:k]) / float(k + 1)
-        #     precisions += p
-        #
-        #     if i in sorted_idx[0:5] and np.sum(hits[0:5]) >= 4:
-        #         result = {
-        #             'query': test_img_names[i],
-        #             'retrieval': [test_txt_names[hh] for hh in sorted_idx[0:5]]
-        #         }
-        #         retrieval_results.append(result)
-        #
-        # with open('./data/wikipedia_dataset/img2txt-retrievals.pkl', 'wb') as f:
-        #     cPickle.dump(retrieval_results, f, cPickle.HIGHEST_PROTOCOL)
-        # print('[Eval - img2txt] finished precision-scope in %4.4fs' % (time.time() - start))
+        feats_trans = sess.run(self.emb_v, feed_dict={self.visual_feats: feats})
+
+        return feats_trans[0]

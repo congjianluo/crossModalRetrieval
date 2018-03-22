@@ -1,27 +1,20 @@
 # -*- coding: utf-8 -*-
-from sqlalchemy import create_engine, Column, Integer, String, text, LargeBinary, Boolean
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
 import numpy as np
-
-engine = create_engine('sqlite:///wikipedia.db', echo=True)
-Base = declarative_base()
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
+from acmr_models.db_model import db
 
 
-class WikiPedia(Base):
+class WikiPedia(db.Model):
     __tablename__ = "wikipedia"
 
-    id = Column(Integer, primary_key=True)
-    pic_id = Column(String(64))
-    document_id = Column(String(64))
-    name = Column(String(32))
-    texts = Column(String(300))
-    feats = Column(LargeBinary(512))
-    vecs = Column(LargeBinary(512))
-    label = Column(Integer)
-    is_test = Column(Boolean)
+    id = db.Column(db.Integer, primary_key=True)
+    pic_id = db.Column(db.String(64))
+    document_id = db.Column(db.String(64))
+    name = db.Column(db.String(32))
+    texts = db.Column(db.String(300))
+    feats = db.Column(db.LargeBinary(512))
+    vecs = db.Column(db.LargeBinary(512))
+    label = db.Column(db.Integer)
+    is_test = db.Column(db.Boolean)
 
     def __init__(self, id, pic_id, document_id, name, texts, feats, vecs, label, is_test=0):
         self.id = id
@@ -38,8 +31,8 @@ class WikiPedia(Base):
 def create_new_img_inf(id, pic_id, document_id, name, texts, feats, vecs, label):
     try:
         new_wiki = WikiPedia(id, pic_id, document_id, name, texts, feats, vecs, label)
-        session.add(new_wiki)
-        session.commit()
+        db.session.add(new_wiki)
+        db.session.commit()
         print(str(id) + "success")
         return True
     except Exception as e:
@@ -49,24 +42,24 @@ def create_new_img_inf(id, pic_id, document_id, name, texts, feats, vecs, label)
 
 def select_wikipedia_info(document_id):
     filter_sql = "document_id=" + "'" + document_id + "'"
-    result = session.query(WikiPedia).filter(text(filter_sql)).scalar()
+    result = db.session.query(WikiPedia).filter(db.text(filter_sql)).scalar()
     return result
 
 
 def select_wikipedia_info_with_pic(pic_id):
     filter_sql = "pic_id=" + "'" + pic_id + "'"
-    result = session.query(WikiPedia).filter(text(filter_sql)).scalar()
+    result = db.session.query(WikiPedia).filter(db.text(filter_sql)).scalar()
     return result
 
 
 def update_wikipedia_info(wikipedia_inf):
     # session.update(wikipedia_inf)
     # print(wikipedia_inf.id)
-    session.commit()
+    db.session.commit()
 
 
 def get_all_img_feats():
-    results = session.query(WikiPedia).all()
+    results = db.session.query(WikiPedia).all()
     wikipedia_feats = []
     for item in results:
         wikipedia_feats.append(np.fromstring(item.feats, dtype=np.float32))
@@ -74,7 +67,7 @@ def get_all_img_feats():
 
 
 def get_all_vecs():
-    results = session.query(WikiPedia).all()
+    results = db.session.query(WikiPedia).all()
     wikepedia_vecs = []
     for item in results:
         wikepedia_vecs.append(np.fromstring(item.vecs, dtype=np.float64))
@@ -82,7 +75,7 @@ def get_all_vecs():
 
 
 def get_all_label():
-    results = session.query(WikiPedia).all()
+    results = db.session.query(WikiPedia).all()
     wikipedia = []
     for item in results:
         wikipedia.append(item.label)
@@ -90,7 +83,7 @@ def get_all_label():
 
 
 def get_all_wikipedia_dataset():
-    results = session.query(WikiPedia).filter().all()
+    results = db.session.query(WikiPedia).filter().all()
     wikipedia_results = []
     for item in results:
         result = {}
@@ -102,7 +95,7 @@ def get_all_wikipedia_dataset():
 
 
 def get_all_wikipedia():
-    results = session.query(WikiPedia).filter().all()
+    results = db.session.query(WikiPedia).filter().all()
     return results
 
 
@@ -123,7 +116,8 @@ def select_img_inf(query_list):
             filter_sql += " and "
         filter_sql += item + " > " + str(acc)
     print(filter_sql)
-    result = session.query(WikiPedia).filter(text(filter_sql)).order_by(text(query_list[0] + " desc")).all()[0:6]
+    result = db.session.query(WikiPedia).filter(db.text(filter_sql)).order_by(db.text(query_list[0] + " desc")).all()[
+             0:6]
     # imgs = []
     # for item in result:
     #     imgs.append(item.id)
@@ -132,7 +126,7 @@ def select_img_inf(query_list):
 
 
 def init_all_table():
-    Base.metadata.create_all(engine)
+    db.create_all()
 
 # if __name__ == "__main__":
 #     # new_img = Img(0, "1.2", "1.2", "1.2", "1.2", "1.2")

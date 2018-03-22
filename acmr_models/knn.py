@@ -3,15 +3,19 @@ import numpy as np
 
 from db_model.db_wikipedia import get_all_wikipedia_dataset
 
-wikipedia_data = get_all_wikipedia_dataset()
+is_init = 0
 
-trains_vecs = []
-trains_label = []
-train_feats = []
-for item in wikipedia_data[0:2865]:
-    train_feats.append(np.fromstring(item["feats"], dtype=np.float32))
-    trains_vecs.append(np.fromstring(item["vecs"], dtype=np.float32))
-    trains_label.append(item["label"])
+
+def init_knn_dataset():
+    wikipedia_data = get_all_wikipedia_dataset()
+    trains_vecs = []
+    trains_label = []
+    train_feats = []
+    for item in wikipedia_data[0:2865]:
+        train_feats.append(np.fromstring(item["feats"], dtype=np.float32))
+        trains_vecs.append(np.fromstring(item["vecs"], dtype=np.float32))
+        trains_label.append(item["label"])
+    return train_feats, trains_vecs, trains_label
 
 
 def kNNClassify(newInput, dataSet, labels, k):
@@ -65,24 +69,24 @@ def kNNClassifyDis():
     return 0
 
 
-feats_groups = train_feats
-feats_groups = np.array([_ for _ in feats_groups])
-
-vecs_groups = trains_vecs
-vecs_groups = np.array([_ for _ in vecs_groups])
-
-
 def get_vecs_knn_ret(testX):
+    train_feats, trains_vecs, trains_label = init_knn_dataset()
+    vecs_groups = trains_vecs
+    vecs_groups = np.array([_ for _ in vecs_groups])
     return kNNClassify(testX, vecs_groups, trains_label, 2)
 
 
 def get_feats_knn_ret(testX):
+    train_feats, trains_vecs, trains_label = init_knn_dataset()
+    feats_groups = train_feats
+    feats_groups = np.array([_ for _ in feats_groups])
     return kNNClassify(testX, feats_groups, trains_label, 2)
 
 
 if __name__ == "__main__":
-    print(wikipedia_data[2865]["label"])
-    tesX = np.fromstring(wikipedia_data[2865]["feats"], dtype=np.float32)
+    train_feats, trains_vecs, trains_label = init_knn_dataset()
+    print(trains_label[2865]["label"])
+    tesX = np.fromstring(train_feats[2865]["feats"], dtype=np.float32)
     print(get_feats_knn_ret(tesX))
-    tesX = np.fromstring(wikipedia_data[2865]["vecs"], dtype=np.float32)
+    tesX = np.fromstring(trains_vecs[2865]["vecs"], dtype=np.float32)
     print(get_vecs_knn_ret(tesX))

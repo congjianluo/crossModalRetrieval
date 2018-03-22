@@ -1,18 +1,23 @@
 # -*- coding: utf-8 -*-
 import os
 import uuid
+
 import tensorflow as tf
-
-from data.vgg16 import run_vgg16
-
 from flask import Flask, json, send_from_directory
-from flask import render_template
-from flask import request
 from flask import jsonify
 from flask import make_response
-from werkzeug.utils import secure_filename
+from flask import render_template
+from flask import request
+
+from acmr_models.db_model import db
+from acmr_models.create_new_info import extract_image_features
+from acmr_models.knn import get_vecs_knn_ret
+from acmr_models.train_adv_crossmodal_simple_wiki import run_acmr
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://///home/luo/Graduation/CrossSystem/wikipedia.db'
+app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', True)
+db.init_app(app)
 
 with tf.Session() as se:
     sess = se
@@ -25,12 +30,13 @@ def index():
 
 @app.route('/result')
 def result():
+    # get_vecs_knn_ret(vecs_trans[0])
+    # get_feats_knn_ret(feats_trans[0])
     search_id = request.args["id"]
     print(search_id)
     # run_vgg16(sess, search_id + ".jpg")
-    ret = True
-    if ret is False:
-        return make_response("非法请求")
+    ret = get_vecs_knn_ret(run_acmr(1, search_id))
+    print(ret)
     return render_template('result.html', ret=json.dumps(ret), img_id=search_id)
 
 
@@ -49,6 +55,7 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = str(uuid.uuid1())  # secure_filename(file.filename)
             file.save(os.path.join('./uploads', filename + ".jpg"))
+            extract_image_features(filename)
             return jsonify({'success': filename})
     return jsonify({'fail': 'shibai'})
 
@@ -70,9 +77,7 @@ def txt2img_ret():
     for query in query_list:
         if query not in all_query:
             query_list.remove(query)
-    if len(query_list) > 0:
-        imgs = select_img_inf(query_list)
-        return render_template("txt2img.html", imgs=imgs, query_txt=query_txt, query_list=query_list)
+        return render_template("txt2img.html", imgs=None, query_txt=query_txt, query_list=query_list)
     else:
         return make_response("该词暂不支持查询～")
 
@@ -87,7 +92,7 @@ def download_file(filename):
         return send_from_directory(directory, "new.jpg", as_attachment=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(host='0.0.0.0', port=2334, debug=True)
     # init_all_table()
 

@@ -17,8 +17,6 @@ from nltk.corpus import stopwords
 from nltk.tag import _pos_tag, PerceptronTagger
 from scipy.misc import imread, imresize
 
-from db_model.db_wikipedia import init_all_table, select_wikipedia_info, update_wikipedia_info, \
-    select_wikipedia_info_with_pic
 from vgg_module import vgg16
 
 # from download import downloadvvvv
@@ -76,11 +74,11 @@ def extract_image_features(pic_name):
     #                 "warfare"]:
     #     filenames += glob_recursive('../wikipedia_dataset/images/' + dirname, '*.jpg')
 
-    filenames += glob_recursive('./images/', pic_name + '.jpg')
+    filenames += glob_recursive('./uploads/', pic_name + '.jpg')
 
     with tf.Session() as sess:
         start = time.time()
-        vgg = vgg16.Vgg16(imgs, "./vgg_module/vgg16_weights.npz", sess)
+        vgg = vgg16.Vgg16(imgs, "./acmr_models/vgg_module/vgg16_weights.npz", sess)
         print('Loaded vgg16 in %4.4fs' % (time.time() - start))
 
         img_data = [imresize(imread(filename, mode='RGB'), (224, 224)) for filename in filenames]
@@ -101,7 +99,7 @@ def extract_image_features(pic_name):
         #     update_wikipedia_info(wikipedia_info)
         # print('[%d/%d] - finished in %4.4fs' % (len(filenames), len(filenames), time.time() - start))
         # img_feats_list = img_feats.values()
-    cPickle.dump(img_feats, open('./images/feats.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
+    cPickle.dump(img_feats, open('./acmr_models/feats/' + pic_name + '-feats.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
     # cPickle.dump(img_feats_list, open('./data/wikipedia_dataset/img_feats_list_vgg16.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
     print('Finished')
 
@@ -192,100 +190,6 @@ def extract_text(input_text):
     cPickle.dump(bow, open('./images/bow.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
     # cPickle.dump(text_vecs_map, open('./data/wikipedia_dataset/filename_vecs_map.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
     print('Calculated vector representations in %4.4fs' % (time.time() - start))
-
-
-def create_train_test_sets():
-    init_all_table()
-    # with open('../wikipedia/img_feats_vgg16.pkl', 'rb') as f:
-    #     img_feats_vgg16 = cPickle.load(f)
-    # with open('../wikipedia/filename_vecs_map.pkl', 'rb') as f:
-    #     filename_vecs_map = cPickle.load(f)
-
-    # create train set
-    start = time.time()
-    train_img_feats = []
-    train_img_files = []
-    train_txt_vecs = []
-    train_txt_files = []
-    train_labels = []
-    hit = 0
-    with open('../wikipedia_dataset/trainset_txt_img_cat.list', 'r') as train_list:
-        for line in train_list:
-            tokens = line.split('\t')
-            train_document_id = tokens[0]
-            train_pic_id = tokens[1]
-            train_label = tokens[2].split("\n")[0]
-            wikipedia_info = select_wikipedia_info(train_document_id)
-            if (wikipedia_info.pic_id == train_pic_id):
-                hit += 1
-            wikipedia_info.label = train_label
-            wikipedia_info.is_test = 0
-            update_wikipedia_info(wikipedia_info)
-            print("hit = " + str(hit))
-            # train_txt_files.append(tokens[0])
-            # train_txt_vecs.append(filename_vecs_map[tokens[0]])
-            # train_img_files.append(tokens[1])
-            # train_img_feats.append(img_feats_vgg16[tokens[1]])
-            # train_labels.append(int(tokens[2]))
-    # with open('./data/wikipedia_dataset/train_img_feats.pkl', 'wb') as f:
-    #     cPickle.dump(train_img_feats, f, cPickle.HIGHEST_PROTOCOL)
-    # with open('./data/wikipedia_dataset/train_txt_vecs.pkl', 'wb') as f:
-    #     cPickle.dump(train_txt_vecs, f, cPickle.HIGHEST_PROTOCOL)
-    # with open('./data/wikipedia_dataset/train_labels.pkl', 'wb') as f:
-    #     cPickle.dump(train_labels, f, cPickle.HIGHEST_PROTOCOL)
-    # with open('./data/wikipedia_dataset/train_img_files.pkl', 'wb') as f:
-    #     cPickle.dump(train_img_files, f, cPickle.HIGHEST_PROTOCOL)
-    # with open('./data/wikipedia_dataset/train_txt_files.pkl', 'wb') as f:
-    #     cPickle.dump(train_txt_files, f, cPickle.HIGHEST_PROTOCOL)
-    # print('Created training set in %4.4fs' % (time.time() - start))
-
-    # create test set
-    start = time.time()
-    test_img_feats = []
-    test_img_files = []
-    test_txt_vecs = []
-    test_txt_files = []
-    test_labels = []
-    test_img_words = {}
-    # with open('../wikipedia/text_words_map.pkl', 'rb') as f:
-    #     text_words_map = cPickle.load(f)
-
-    with open('../wikipedia_dataset/testset_txt_img_cat.list', 'r') as test_list:
-        for line in test_list:
-            tokens = line.split('\t')
-            test_document_id = tokens[0]
-            test_pic_id = tokens[1]
-            test_label = tokens[2].split("\n")[0]
-            wikipedia_info = select_wikipedia_info(test_document_id)
-            if (wikipedia_info.pic_id == test_pic_id):
-                hit += 1
-            wikipedia_info.label = test_label
-            wikipedia_info.is_test = 1
-            update_wikipedia_info(wikipedia_info)
-            print("hit = " + str(hit))
-            # test_txt_files.append(tokens[0])
-            # test_txt_vecs.append(filename_vecs_map[tokens[0]])
-            # test_img_files.append(tokens[1])
-            # test_img_feats.append(img_feats_vgg16[tokens[1]])
-            # test_labels.append(int(tokens[2]))
-    # for i in range(len(test_txt_vecs)):
-    #     txt_filename = test_txt_files[i]
-    #     img_filename = test_img_files[i]
-    #     words = text_words_map[txt_filename]
-    #     test_img_words[img_filename] = words
-    # with open('./data/wikipedia_dataset/test_img_feats.pkl', 'wb') as f:
-    #     cPickle.dump(test_img_feats, f, cPickle.HIGHEST_PROTOCOL)
-    # with open('./data/wikipedia_dataset/test_txt_vecs.pkl', 'wb') as f:
-    #     cPickle.dump(test_txt_vecs, f, cPickle.HIGHEST_PROTOCOL)
-    # with open('./data/wikipedia_dataset/test_labels.pkl', 'wb') as f:
-    #     cPickle.dump(test_labels, f, cPickle.HIGHEST_PROTOCOL)
-    # with open('./data/wikipedia_dataset/test_img_files.pkl', 'wb') as f:
-    #     cPickle.dump(test_img_files, f, cPickle.HIGHEST_PROTOCOL)
-    # with open('./data/wikipedia_dataset/test_txt_files.pkl', 'wb') as f:
-    #     cPickle.dump(test_txt_files, f, cPickle.HIGHEST_PROTOCOL)
-    # with open('./data/wikipedia_dataset/test_img_words.pkl', 'wb') as f:
-    #     cPickle.dump(test_img_words, f, cPickle.HIGHEST_PROTOCOL)
-    print('Created test set in %4.4fs' % (time.time() - start))
 
 
 def main():
