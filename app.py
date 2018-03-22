@@ -14,8 +14,10 @@ from acmr_models.create_new_info import extract_image_features
 from acmr_models.knn import get_vecs_knn_ret
 from acmr_models.train_adv_crossmodal_simple_wiki import run_acmr
 
+sqlite_path = os.path.dirname(os.path.realpath(__file__))
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://///home/luo/Graduation/CrossSystem/wikipedia.db'
+print "current_dir : " + sqlite_path
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + sqlite_path + '/wikipedia.db'
 app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', True)
 db.init_app(app)
 
