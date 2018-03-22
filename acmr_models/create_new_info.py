@@ -20,9 +20,8 @@ from scipy.misc import imread, imresize
 from vgg_module import vgg16
 
 # from download import downloadvvvv
-import nltk
-
-nltk.download('stopwords')
+# import nltk
+# nltk.download('stopwords')
 
 _perceptronTagger = PerceptronTagger()
 

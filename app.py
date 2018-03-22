@@ -2,7 +2,6 @@
 import os
 import uuid
 
-import tensorflow as tf
 from flask import Flask, json, send_from_directory
 from flask import jsonify
 from flask import make_response
@@ -11,6 +10,7 @@ from flask import request
 
 from acmr_models.db_model import db
 from acmr_models.create_new_info import extract_image_features
+from acmr_models.db_model.db_wikipedia import get_wikipedia_with_id
 from acmr_models.knn import get_vecs_knn_ret
 from acmr_models.train_adv_crossmodal_simple_wiki import run_acmr
 
@@ -20,9 +20,6 @@ print "current_dir : " + sqlite_path
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + sqlite_path + '/wikipedia.db'
 app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', True)
 db.init_app(app)
-
-with tf.Session() as se:
-    sess = se
 
 
 @app.route('/')
@@ -37,9 +34,19 @@ def result():
     search_id = request.args["id"]
     print(search_id)
     # run_vgg16(sess, search_id + ".jpg")
-    ret = get_vecs_knn_ret(run_acmr(1, search_id))
-    print(ret)
-    return render_template('result.html', ret=json.dumps(ret), img_id=search_id)
+    cat_id, imgs_id = get_vecs_knn_ret(run_acmr(1, search_id))
+    categories_list = ["art", "biology", "geography", "history", "literature",
+                       "media", "music", "royalty", "sport", "warfare"]
+    label = categories_list[cat_id-1]
+    imgs = []
+    for img_id in imgs_id:
+        img = {}
+        temp_img = get_wikipedia_with_id(img_id)
+        img["pic_id"] = temp_img.pic_id
+        img["name"] = temp_img.name
+        img["texts"] = temp_img.texts
+        imgs.append(img)
+    return render_template('img2txt.html', search_id=search_id,label=label, imgs=imgs, categories_list=categories_list)
 
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -95,7 +102,7 @@ def download_file(filename):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=2334, debug=True)
+    app.run(host='0.0.0.0', port=2333, debug=True)
     # init_all_table()
 
     # for i in range(2000):

@@ -40,6 +40,12 @@ def create_new_img_inf(id, pic_id, document_id, name, texts, feats, vecs, label)
         return False
 
 
+def get_wikipedia_with_id(id):
+    filter_sql = "id=" + str(id)
+    result = db.session.query(WikiPedia).filter(db.text(filter_sql)).scalar()
+    return result
+
+
 def select_wikipedia_info(document_id):
     filter_sql = "document_id=" + "'" + document_id + "'"
     result = db.session.query(WikiPedia).filter(db.text(filter_sql)).scalar()
