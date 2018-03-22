@@ -68,7 +68,7 @@ def find_word_vecs(words, data_file):
 #         print('Found vgg16 weight, skip')
 
 
-def extract_image_features():
+def extract_image_features(pic_name):
     imgs = tf.placeholder(tf.float32, [None, 224, 224, 3])
     batch_size = 1
     filenames = []
@@ -76,26 +76,20 @@ def extract_image_features():
     #                 "warfare"]:
     #     filenames += glob_recursive('../wikipedia_dataset/images/' + dirname, '*.jpg')
 
-    filenames += glob_recursive('./images/', '*.jpg')
-    num_batches = len(filenames) / batch_size
-
-    img_feats = {}
+    filenames += glob_recursive('./images/', pic_name + '.jpg')
 
     with tf.Session() as sess:
         start = time.time()
         vgg = vgg16.Vgg16(imgs, "./vgg_module/vgg16_weights.npz", sess)
         print('Loaded vgg16 in %4.4fs' % (time.time() - start))
 
-        for i in range(0, num_batches):
-            batch_filenames = filenames[i * batch_size: (i + 1) * batch_size]
-            img_data = [imresize(imread(filename, mode='RGB'), (224, 224)) for filename in batch_filenames]
-            feats = sess.run(vgg.fc2, feed_dict={vgg.imgs: img_data})
-            for ii in range(batch_size):
-                wikipedia_info = select_wikipedia_info_with_pic(splitext(basename(batch_filenames[ii]))[0])
-                img_feats[splitext(basename(batch_filenames[ii]))[0]] = feats[ii]
-                wikipedia_info.feats = feats[ii].tostring()  # np.fromstring(my_string, dtype=np.float)
-                update_wikipedia_info(wikipedia_info)
-            print('[%d/%d] - finished in %4.4fs' % ((i + 1) * batch_size, len(filenames), time.time() - start))
+        img_data = [imresize(imread(filename, mode='RGB'), (224, 224)) for filename in filenames]
+        feats = sess.run(vgg.fc2, feed_dict={vgg.imgs: img_data})
+        # wikipedia_info = select_wikipedia_info_with_pic(splitext(basename(batch_filenames[ii]))[0])
+        img_feats = feats[0]
+        # wikipedia_info.feats = feats[ii].tostring()  # np.fromstring(my_string, dtype=np.float)
+        # update_wikipedia_info(wikipedia_info)
+        print('pic_feats finished in %4.4fs' % (time.time() - start))
 
         # batch_filenames = filenames[num_batches * batch_size: len(filenames)]
         # img_data = [imresize(imread(filename, mode='RGB'), (224, 224)) for filename in batch_filenames]
@@ -138,7 +132,7 @@ def extract_words_from_xml(filename):
     return tokens, text_backup, name, pic_id
 
 
-def extract_text():
+def extract_text(input_text):
     # # init_all_table()
     # print('Extracting wiki text')
     #
@@ -179,7 +173,8 @@ def extract_text():
     start = time.time()
     text_vecs_map = {}
     i = 0
-    tokens = text_words_map["0b4ebd99673d910a6747df881d000dc1-9"]
+    input_text = text_words_map["0b4ebd99673d910a6747df881d000dc1-9"]
+    tokens = input_text
     bow = np.zeros([len(dictionary.keys())])
     # cnt_num = 0g
     for chunk in gensim.utils.chunkize(tokens, chunksize, maxsize=2):
@@ -295,8 +290,8 @@ def create_train_test_sets():
 
 def main():
     # download_vgg16_weights('./data/vgg16')
-    extract_text()
-    extract_image_features()
+    extract_text("")
+    # extract_image_features("0b357ab251ab2ee706a23b6d8fcdd726")
     # create_train_test_sets()
 
 

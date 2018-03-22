@@ -397,7 +397,7 @@ class AdvCrossModalSimple(BaseModel):
 
         feats = []
         with open('./images/feats.pkl', 'rb') as f:
-            feats.append(cPickle.load(f)['0b357ab251ab2ee706a23b6d8fcdd726'])
+            feats.append(cPickle.load(f))
 
         feats_trans = sess.run(self.emb_v, feed_dict={self.visual_feats: feats})
 
