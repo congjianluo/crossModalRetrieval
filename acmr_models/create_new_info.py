@@ -107,7 +107,7 @@ def extract_image_features():
         #     update_wikipedia_info(wikipedia_info)
         # print('[%d/%d] - finished in %4.4fs' % (len(filenames), len(filenames), time.time() - start))
         # img_feats_list = img_feats.values()
-    # cPickle.dump(img_feats, open('./images/img_feats_vgg16.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
+    cPickle.dump(img_feats, open('./images/feats.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
     # cPickle.dump(img_feats_list, open('./data/wikipedia_dataset/img_feats_list_vgg16.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
     print('Finished')
 
@@ -164,7 +164,7 @@ def extract_text():
     #
     # # Build dictionary
     # cPickle.dump(text_words_map, open('./images/text_words_map.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
-    text_words_map = cPickle.load(open('./images/text_words_map.pkl', 'rb'))
+    text_words_map = cPickle.load(open('./images/all_text_words_map.pkl', 'rb'))
 
     dictionary = gensim.corpora.Dictionary(tokens for _, tokens in text_words_map.items())
     dictionary.filter_extremes(no_below=5, keep_n=5000)
@@ -296,7 +296,7 @@ def create_train_test_sets():
 def main():
     # download_vgg16_weights('./data/vgg16')
     extract_text()
-    # extract_image_features()
+    extract_image_features()
     # create_train_test_sets()
 
 

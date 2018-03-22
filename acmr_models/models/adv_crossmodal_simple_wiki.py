@@ -6,11 +6,9 @@ import tensorflow.contrib.slim as slim
 from random import shuffle
 import sklearn.preprocessing
 from base_model import BaseModel, BaseModelParams, BaseDataIter
-import utils
 from flip_gradient import flip_gradient
-from db_model.db_wikipedia import get_all_img_feats, get_all_vecs, get_all_label, get_all_wikipedia_dataset, \
-    update_wikipedia_info, get_all_wikipedia
-from knn import get_feats_knn_ret, get_vecs_knn_ret
+from acmr_models.db_model.db_wikipedia import get_all_img_feats, get_all_vecs, get_all_label, get_all_wikipedia_dataset
+from acmr_models.knn import get_feats_knn_ret, get_vecs_knn_ret
 
 
 class DataIter(BaseDataIter):
@@ -398,7 +396,7 @@ class AdvCrossModalSimple(BaseModel):
         test_labels = []
 
         feats = []
-        with open('./images/img_feats_vgg16.pkl', 'rb') as f:
+        with open('./images/feats.pkl', 'rb') as f:
             feats.append(cPickle.load(f)['0b357ab251ab2ee706a23b6d8fcdd726'])
 
         feats_trans = sess.run(self.emb_v, feed_dict={self.visual_feats: feats})

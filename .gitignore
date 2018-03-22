@@ -8,7 +8,12 @@
 *.png
 *.jpg
 *.db
+*.index
+*.meta
+*.pkl
 
+
+acmr_models/simple/
 static/img/
 uploads/
 /inception/
