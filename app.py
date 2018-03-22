@@ -3,9 +3,7 @@ import os
 import uuid
 import tensorflow as tf
 
-from inception.label_image import get_img_labels
 from data.vgg16 import run_vgg16
-from model.imgInf import create_new_img_inf, init_all_table, select_img_inf
 
 from flask import Flask, json, send_from_directory
 from flask import render_template
@@ -30,7 +28,7 @@ def result():
     search_id = request.args["id"]
     print(search_id)
     # run_vgg16(sess, search_id + ".jpg")
-    ret = get_img_labels(sess, search_id + ".jpg")
+    ret = True
     if ret is False:
         return make_response("非法请求")
     return render_template('result.html', ret=json.dumps(ret), img_id=search_id)
@@ -90,7 +88,7 @@ def download_file(filename):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000, debug=True)
+    app.run(host='0.0.0.0', port=2334, debug=True)
     # init_all_table()
 
     # for i in range(2000):
