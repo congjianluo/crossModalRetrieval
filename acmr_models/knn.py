@@ -46,6 +46,8 @@ def kNNClassify(newInput, dataSet, labels, k):
                 break
         index += 1
 
+    print(sortedOrdered)
+    print(sortedOrderedValue)
     classCount = {}  # define a dictionary (can be append element)
     for i in xrange(k):
         ## step 3: choose the min k distance
