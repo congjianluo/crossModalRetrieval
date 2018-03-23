@@ -11,7 +11,7 @@ def init_knn_dataset():
     trains_vecs = []
     trains_label = []
     train_feats = []
-    for item in wikipedia_data[0:2865]:
+    for item in wikipedia_data:
         train_feats.append(np.fromstring(item["feats"], dtype=np.float32))
         trains_vecs.append(np.fromstring(item["vecs"], dtype=np.float32))
         trains_label.append(item["label"])
@@ -33,21 +33,21 @@ def kNNClassify(newInput, dataSet, labels, k):
     # argsort() returns the indices that would sort an array in a ascending order
     sortedDistIndices = np.argsort(distance)
 
-    LimitValue = 10
-    sortedOrdered = [0 for i in range(LimitValue)]
-    sortedOrderedValue = [max(sortedDistIndices) for i in range(LimitValue)]
-
-    index = 0
-    for item in sortedDistIndices:
-        for i in range(LimitValue):
-            if item < sortedOrderedValue[i]:
-                sortedOrderedValue[i] = item
-                sortedOrdered[i] = index
-                break
-        index += 1
-
-    print(sortedOrdered)
-    print(sortedOrderedValue)
+    # LimitValue = 10
+    # sortedOrdered = [0 for i in range(LimitValue)]
+    # sortedOrderedValue = [max(sortedDistIndices) for i in range(LimitValue)]
+    #
+    # index = 0
+    # for item in sortedDistIndices:
+    #     for i in range(LimitValue):
+    #         if item < sortedOrderedValue[i]:
+    #             sortedOrderedValue[i] = item
+    #             sortedOrdered[i] = index
+    #             break
+    #     index += 1
+    #
+    # print(sortedOrdered)
+    # print(sortedOrderedValue)
     classCount = {}  # define a dictionary (can be append element)
     for i in xrange(k):
         ## step 3: choose the min k distance
@@ -64,7 +64,8 @@ def kNNClassify(newInput, dataSet, labels, k):
         if value > maxCount:
             maxCount = value
             maxIndex = key
-    return maxIndex, sortedOrdered
+    print(sortedDistIndices[:10])
+    return maxIndex, sortedDistIndices[:10]
 
 
 def kNNClassifyDis():

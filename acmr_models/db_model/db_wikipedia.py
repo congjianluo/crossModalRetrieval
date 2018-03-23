@@ -89,7 +89,7 @@ def get_all_label():
 
 
 def get_all_wikipedia_dataset():
-    results = db.session.query(WikiPedia).filter().all()
+    results = db.session.query(WikiPedia).order_by(WikiPedia.id).all()
     wikipedia_results = []
     for item in results:
         result = {}
