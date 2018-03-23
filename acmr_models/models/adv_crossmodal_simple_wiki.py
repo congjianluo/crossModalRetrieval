@@ -344,11 +344,9 @@ class AdvCrossModalSimple(BaseModel):
         mean_avg_prec = np.mean(avg_precs)
         print('[Eval - random] mAP: %f in %4.4fs' % (mean_avg_prec, (time.time() - start)))
 
-    def eval_vecs(self, sess, text_path):
+    def eval_vecs(self, sess, text):
         vecs = []
-        with open('./images/bow.pkl', 'rb') as f:
-            vecs.append(cPickle.load(f))
-
+        vecs.append(text)
         vecs_trans = sess.run(self.emb_w, feed_dict={self.word_vecs: vecs})
         return vecs_trans[0]
 

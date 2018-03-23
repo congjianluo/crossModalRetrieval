@@ -155,23 +155,21 @@ def extract_text(input_text):
     #
     # # Build dictionary
     # cPickle.dump(text_words_map, open('./images/text_words_map.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
-    text_words_map = cPickle.load(open('./images/all_text_words_map.pkl', 'rb'))
+    text_words_map = cPickle.load(open('./acmr_models/images/all_text_words_map.pkl', 'rb'))
 
     dictionary = gensim.corpora.Dictionary(tokens for _, tokens in text_words_map.items())
     dictionary.filter_extremes(no_below=5, keep_n=5000)
     dictionary.compactify()
     tfidf = gensim.models.tfidfmodel.TfidfModel([tokens for _, tokens in text_words_map.items()], dictionary=dictionary)
-    print('%s' % len(dictionary.keys()))
-    print('%s' % len(text_words_map.keys()))
+    # print('%s' % len(dictionary.keys()))
+    # print('%s' % len(text_words_map.keys()))
 
     # Generate word vec representations
     chunksize = 5000
-    print('Calculating vector representations')
+    # print('Calculating vector representations')
     start = time.time()
-    text_vecs_map = {}
-    i = 0
-    input_text = text_words_map["0b4ebd99673d910a6747df881d000dc1-9"]
-    tokens = input_text
+    # input_text = text_words_map["0b4ebd99673d910a6747df881d000dc1-9"]
+    tokens = input_text.split(" ")
     bow = np.zeros([len(dictionary.keys())])
     # cnt_num = 0g
     for chunk in gensim.utils.chunkize(tokens, chunksize, maxsize=2):
@@ -181,14 +179,8 @@ def extract_text(input_text):
         vec_dict = {key: val for key, val in vec_list}
         for key in keys:
             bow[key] += vec_dict[key]
-        # wikipedia_info = select_wikipedia_info(k)
-        # wikipedia_info.vecs = bow.tostring()
-        # update_wikipedia_info(wikipedia_info)
-        # print(i)
-        # i += 1
-    cPickle.dump(bow, open('./images/bow.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
-    # cPickle.dump(text_vecs_map, open('./data/wikipedia_dataset/filename_vecs_map.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
     print('Calculated vector representations in %4.4fs' % (time.time() - start))
+    return bow
 
 
 def main():

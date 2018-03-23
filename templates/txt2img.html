@@ -39,15 +39,22 @@
     <header class="clearfix">
 
         <span href="/">CFM <span class="bp-icon bp-icon-about"
-                        data-content=" 未来媒体研究中心申恒涛教授团队自 2014 年成立以来，除瞄准高水平学术科研工作外，还高度重视创新人才培养工作。中心全体教师均承担本科和研究生教学，在培养学生从事高水平科研“硬实力”的同时，通过“听说读写”新四会能力的培养提升学生的“软实力”，助力培育具有跨界交叉融合、集成创新能力，具有国际视野的创新拔尖人才。三年来，团队培养优秀研究生 76 余人，其中包括博士生 9 人，硕士研究生共 67 人。"></span></span>
+                                 data-content=" 未来媒体研究中心申恒涛教授团队自 2014 年成立以来，除瞄准高水平学术科研工作外，还高度重视创新人才培养工作。中心全体教师均承担本科和研究生教学，在培养学生从事高水平科研“硬实力”的同时，通过“听说读写”新四会能力的培养提升学生的“软实力”，助力培育具有跨界交叉融合、集成创新能力，具有国际视野的创新拔尖人才。三年来，团队培养优秀研究生 76 余人，其中包括博士生 9 人，硕士研究生共 67 人。"></span></span>
         <h1>检索结果</h1>
 
     </header>
 
 
-    <div style="height: 50px;max-width: 69em;margin: auto;padding-left: 10%;padding-right: 10%" class="box">
-        <h3 style="">合法检索词条：</h3>
-        <h3 style="">{% for query in query_list %} {{ query }}  &nbsp&nbsp {% endfor %}</h3>
+    <div style="height: 120px;max-width: 100em;margin: auto;padding-left: 10%;padding-right: 10%" class="box">
+        <h3 align="center" style="width: 50%;margin: auto">
+            检索词条： {{ query_txt|truncate(110) }}</h3>
+        <h3 align="center" style="width: 50%;margin: auto">检索词条类别：{{ label }}</h3>
+        <div class="row_box">
+            <p style="margin: auto">全部类别：{% for category in categories_list %} {{ category }}  &nbsp&nbsp {% endfor %}</p>
+        </div>
+    </div>
+
+    <div style="height: 1px;max-width: 69em;margin: auto;padding-left: 10%;padding-right: 10%" class="box">
     </div>
 
     <div id="grid-gallery" class="grid-gallery">
@@ -63,10 +70,15 @@
 
                         <figure>
 
-                            <img src="/static/multi-label/{{ img["id"] }}.jpg" alt="img01"/>
+                            <img src="/static/wikipedia_images/{{ img["pic_id"] }}.jpg" alt="img01"/>
 
-                            <figcaption><h3>{{ query_txt }} {{ loop.index }}</h3>
-                                <p>近似率：<br> {% for query in query_list %} {{ query }}  &nbsp :&nbsp{{ img[query] }} <br> {% endfor %}</p></figcaption>
+                            <figcaption>
+                                <h3>图{{ loop.index }} &nbsp
+                                    {% if img["name"]|length  > 15 %} {{ img["name"][:15] + "..." }}
+                                    {% else %} {{ img["name"] }}
+                                    {% endif %}
+                                </h3>
+                                <p>{{ img["texts"][:150] + "...." }}</p></figcaption>
 
                         </figure>
 
@@ -86,17 +98,17 @@
 
                         <figure>
 
-                        <figcaption>
+                            <figcaption>
 
-                            <h3>{{ query_txt }} {{ loop.index }}</h3>
+                                <h3>图{{ loop.index }} &nbsp {{ img["name"] }}</h3>
 
-                           <p>近似率：<br> {% for query in query_list %} {{ query }}  &nbsp :&nbsp{{ img[query] }} <br> {% endfor %}</p>
+                                <p>文章：<br> {{ img["texts"] }}</p>
 
-                        </figcaption>
+                            </figcaption>
 
-                        <img src="/static/multi-label/{{ img["id"] }}.jpg" alt="img01"/>
+                            <img src="/static/wikipedia_images/{{ img["pic_id"] }}.jpg" alt="img01"/>
 
-                    </figure>
+                        </figure>
 
                     </li>
 

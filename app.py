@@ -9,9 +9,9 @@ from flask import render_template
 from flask import request
 
 from acmr_models.db_model import db
-from acmr_models.create_new_info import extract_image_features
+from acmr_models.create_new_info import extract_image_features, extract_text
 from acmr_models.db_model.db_wikipedia import get_wikipedia_with_id
-from acmr_models.knn import get_vecs_knn_ret
+from acmr_models.knn import get_vecs_knn_ret, get_feats_knn_ret
 from acmr_models.train_adv_crossmodal_simple_wiki import run_acmr
 
 sqlite_path = os.path.dirname(os.path.realpath(__file__))
@@ -34,10 +34,10 @@ def result():
     search_id = request.args["id"]
     print(search_id)
     # run_vgg16(sess, search_id + ".jpg")
-    cat_id, imgs_id = get_vecs_knn_ret(run_acmr(1, search_id))
+    cat_id, imgs_id = get_feats_knn_ret(run_acmr(1, search_id))
     categories_list = ["art", "biology", "geography", "history", "literature",
                        "media", "music", "royalty", "sport", "warfare"]
-    label = categories_list[cat_id-1]
+    label = categories_list[cat_id - 1]
     imgs = []
     for img_id in imgs_id:
         img = {}
@@ -46,7 +46,7 @@ def result():
         img["name"] = temp_img.name
         img["texts"] = temp_img.texts
         imgs.append(img)
-    return render_template('img2txt.html', search_id=search_id,label=label, imgs=imgs, categories_list=categories_list)
+    return render_template('img2txt.html', search_id=search_id, label=label, imgs=imgs, categories_list=categories_list)
 
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -81,14 +81,23 @@ def search_img():
 @app.route("/txt2img_ret")
 def txt2img_ret():
     query_txt = request.args["query"]
-    all_query = ["desert", "mountains", "sea", "sunset", "trees"]
-    query_list = query_txt.split(" ")
-    for query in query_list:
-        if query not in all_query:
-            query_list.remove(query)
-        return render_template("txt2img.html", imgs=None, query_txt=query_txt, query_list=query_list)
+    if len(query_txt) > 0:
+        cat_id, imgs_id = get_vecs_knn_ret(run_acmr(0, extract_text(query_txt)))
+        categories_list = ["art", "biology", "geography", "history", "literature",
+                           "media", "music", "royalty", "sport", "warfare"]
+        label = categories_list[cat_id - 1]
+        imgs = []
+        for img_id in imgs_id:
+            img = {}
+            temp_img = get_wikipedia_with_id(img_id)
+            img["pic_id"] = temp_img.pic_id
+            img["name"] = temp_img.name
+            img["texts"] = temp_img.texts
+            imgs.append(img)
+        return render_template('txt2img.html', query_txt=query_txt, label=label, imgs=imgs,
+                               categories_list=categories_list)
     else:
-        return make_response("该词暂不支持查询～")
+        return make_response("异常输入～")
 
 
 @app.route("/download/<filename>", methods=['GET'])
