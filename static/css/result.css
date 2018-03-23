@@ -6,6 +6,10 @@
     align-items: stretch;
 }
 
-.box-item{
-
+.row_box {
+    display: -webkit-flex; /* Safari */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
 }

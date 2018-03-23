@@ -45,13 +45,19 @@
     </header>
 
 
-    <div style="height: 200px;max-width: 69em;margin: auto;padding-left: 10%;padding-right: 10%" class="box">
-        <img style="max-height: 150px;width:auto;vertical-align:middle;" src="/download/{{ search_id }}.jpg" class="img-thumbnail">
-        <h3 align="center">检索图像类别：{{ label }}</h3>
-        <p style="">全部类别：{% for category in categories_list %} {{ category }}  &nbsp&nbsp {% endfor %}</p>
+    <div style="height: 220px;max-width: 69em;margin: auto;padding-left: 10%;padding-right: 10%" class="box">
+        <div style="height: 200px;" class="row_box">
+            <img style="max-height: 200px;max-width: 150px;margin: auto;display: block"
+                 src="/download/{{ search_id }}.jpg"
+                 class="img-thumbnail">
+            <h3 align="center" style="width: 50%;line-height: 100px;padding-right: 30px">检索图像类别：{{ label }}</h3>
+        </div>
+        <div class="row_box">
+            <p style="">全部类别：{% for category in categories_list %} {{ category }}  &nbsp&nbsp {% endfor %}</p>
+        </div>
     </div>
 
-    <div style="height: 50px;max-width: 69em;margin: auto;padding-left: 10%;padding-right: 10%" class="box">
+    <div style="height: 1px;max-width: 69em;margin: auto;padding-left: 10%;padding-right: 10%" class="box">
     </div>
 
     <div id="grid-gallery" class="grid-gallery">
@@ -69,7 +75,12 @@
 
                             <img src="/static/wikipedia_images/{{ img["pic_id"] }}.jpg" alt="img01"/>
 
-                            <figcaption><h3>图{{ loop.index }} &nbsp {{ img["name"] }}</h3>
+                            <figcaption>
+                                <h3>图{{ loop.index }} &nbsp
+                                    {% if img["name"]|length  > 15 %} {{ img["name"][:15] + "..." }}
+                                    {% else %} {{ img["name"] }}
+                                    {% endif %}
+                                </h3>
                                 <p>{{ img["texts"][:150] + "...." }}</p></figcaption>
 
                         </figure>
