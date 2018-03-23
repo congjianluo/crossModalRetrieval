@@ -38,7 +38,7 @@
 
     <header class="clearfix">
 
-        <span href="/">CFM <span class="bp-icon bp-icon-about"
+        <span onclick="goToIndex()">CFM <span class="bp-icon bp-icon-about"
                                  data-content=" 未来媒体研究中心申恒涛教授团队自 2014 年成立以来，除瞄准高水平学术科研工作外，还高度重视创新人才培养工作。中心全体教师均承担本科和研究生教学，在培养学生从事高水平科研“硬实力”的同时，通过“听说读写”新四会能力的培养提升学生的“软实力”，助力培育具有跨界交叉融合、集成创新能力，具有国际视野的创新拔尖人才。三年来，团队培养优秀研究生 76 余人，其中包括博士生 9 人，硕士研究生共 67 人。"></span></span>
         <h1>检索结果</h1>
 
@@ -146,6 +146,9 @@
 
     new CBPGridGallery(document.getElementById('grid-gallery'));
 
+    function goToIndex() {
+        window.location.href="/"
+    }
 </script>
 
 </body>
