@@ -83,6 +83,8 @@ def txt2img_ret():
     query_txt = request.args["query"]
     if len(query_txt) > 0:
         cat_id, imgs_id = get_vecs_knn_ret(run_acmr(0, extract_text(query_txt)))
+        # import numpy as np
+        # cat_id, imgs_id = get_vecs_knn_ret(np.fromstring(get_wikipedia_with_id(20).vecs, np.float32))
         categories_list = ["art", "biology", "geography", "history", "literature",
                            "media", "music", "royalty", "sport", "warfare"]
         label = categories_list[cat_id - 1]
@@ -111,7 +113,7 @@ def download_file(filename):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=2335, debug=True)
+    app.run(host='0.0.0.0', port=2332, debug=True)
     # init_all_table()
 
     # for i in range(2000):

@@ -169,7 +169,11 @@ def extract_text(input_text):
     # print('Calculating vector representations')
     start = time.time()
     # input_text = text_words_map["0b4ebd99673d910a6747df881d000dc1-9"]
-    tokens = input_text.split(" ")
+    text = gensim.utils.to_unicode(input_text)
+    text = gensim.utils.decode_htmlentities(text)
+    text = text.replace('\n', ' ')
+    tokens = tokenize(text)
+    tokens = [word.encode('utf-8') for word in tokens]
     bow = np.zeros([len(dictionary.keys())])
     # cnt_num = 0g
     for chunk in gensim.utils.chunkize(tokens, chunksize, maxsize=2):
