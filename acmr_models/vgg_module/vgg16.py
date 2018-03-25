@@ -21,7 +21,7 @@ class Vgg16:
         self.probs = tf.nn.softmax(self.fc3l)
         self.weights = np.load(weights)
         if weights is not None and sess is not None:
-            self.load_weights(weights, sess)
+            self.load_weights(sess)
 
     def convlayers(self):
         self.parameters = []
