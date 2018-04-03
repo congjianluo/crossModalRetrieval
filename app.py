@@ -28,7 +28,7 @@ def index():
 
 
 @app.route('/img2txt_ret')
-def result():
+def img2txt_ret():
     # get_vecs_knn_ret(vecs_trans[0])
     # get_feats_knn_ret(feats_trans[0])
     search_id = request.args["id"]
