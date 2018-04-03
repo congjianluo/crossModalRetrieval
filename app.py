@@ -2,21 +2,21 @@
 import os
 import uuid
 
-from flask import Flask, json, send_from_directory
+from flask import Flask, send_from_directory
 from flask import jsonify
 from flask import make_response
 from flask import render_template
 from flask import request
 
-from acmr_models.db_model import db
 from acmr_models.create_new_info import extract_image_features, extract_text
+from acmr_models.db_model import db
 from acmr_models.db_model.db_wikipedia import get_wikipedia_with_id
 from acmr_models.knn import get_vecs_knn_ret, get_feats_knn_ret
 from acmr_models.train_adv_crossmodal_simple_wiki import run_acmr
 
 sqlite_path = os.path.dirname(os.path.realpath(__file__))
-app = Flask(__name__)
 print "current_dir : " + sqlite_path
+app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + sqlite_path + '/wikipedia.db'
 app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', True)
 db.init_app(app)
