@@ -27,7 +27,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/result')
+@app.route('/img2txt_ret')
 def result():
     # get_vecs_knn_ret(vecs_trans[0])
     # get_feats_knn_ret(feats_trans[0])
