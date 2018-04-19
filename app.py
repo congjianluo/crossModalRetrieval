@@ -112,8 +112,14 @@ def download_file(filename):
         return send_from_directory(directory, "new.jpg", as_attachment=True)
 
 
+@app.route("/detail/<id>")
+def detail(id):
+    pedia = get_wikipedia_with_id(id)
+    return render_template("detail.html", name=pedia.name, texts=pedia.texts, pic_id=pedia.pic_id)
+
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=2333, debug=True)
+    app.run(host='0.0.0.0', port=2334, debug=True)
     # init_all_table()
 
     # for i in range(2000):
