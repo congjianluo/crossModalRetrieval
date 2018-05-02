@@ -42,11 +42,12 @@ def img2txt_ret():
     for img_id in imgs_id:
         img = {}
         temp_img = get_wikipedia_with_id(img_id)
+        img["id"] = temp_img.id
         img["pic_id"] = temp_img.pic_id
         img["name"] = temp_img.name
         img["texts"] = temp_img.texts
         imgs.append(img)
-    return render_template('img2txt.html', search_id=search_id, label=label, imgs=imgs, categories_list=categories_list)
+    return render_template('img.html', search_id=search_id, label=label, imgs=imgs, categories_list=categories_list)
 
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -92,11 +93,12 @@ def txt2img_ret():
         for img_id in imgs_id:
             img = {}
             temp_img = get_wikipedia_with_id(img_id)
+            img["id"] = temp_img.id
             img["pic_id"] = temp_img.pic_id
             img["name"] = temp_img.name
             img["texts"] = temp_img.texts
             imgs.append(img)
-        return render_template('txt2img.html', query_txt=query_txt, label=label, imgs=imgs,
+        return render_template('text.html', query_txt=query_txt, label=label, imgs=imgs,
                                categories_list=categories_list)
     else:
         return make_response("异常输入～")
