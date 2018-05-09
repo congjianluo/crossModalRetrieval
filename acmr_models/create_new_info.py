@@ -15,13 +15,14 @@ import tensorflow as tf
 from bs4 import BeautifulSoup
 from nltk.corpus import stopwords
 from nltk.tag import _pos_tag, PerceptronTagger
-from scipy.misc import imread, imresize
+from scipy.misc.pilutil import imread, imresize
 
 from vgg_module import vgg16
 
 # from download import downloadvvvv
-# import nltk
-# nltk.download('stopwords')
+import nltk
+nltk.download('averaged_perceptron_tagger')
+nltk.download('stopwords')
 
 _perceptronTagger = PerceptronTagger()
 
