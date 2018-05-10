@@ -65,13 +65,13 @@ class AdvCrossModalSimple(BaseModel):
         # dissimilar loss
         emb_v_ = tf.reduce_sum(self.emb_v, axis=1, keep_dims=True)
         emb_w_ = tf.reduce_sum(self.emb_w, axis=1, keep_dims=True)
-        distance_map = tf.matmul(emb_v_, tf.ones([1, self.model_params.batch_size])) - tf.matmul(self.emb_v,
-                                                                                                 tf.transpose(
-                                                                                                     self.emb_w)) + \
-                       tf.matmul(tf.ones([self.model_params.batch_size, 1]), tf.transpose(emb_w_))
+        distance_map = tf.matmul(emb_v_, tf.ones([1, self.model_params.batch_size])) \
+                       - tf.matmul(self.emb_v, tf.transpose(self.emb_w)) \
+                       + tf.matmul(tf.ones([self.model_params.batch_size, 1]), tf.transpose(emb_w_))
         mask_initial = tf.to_float(
-            tf.matmul(self.y_single, tf.ones([1, self.model_params.batch_size], dtype=tf.int32)) - \
-            tf.matmul(tf.ones([self.model_params.batch_size, 1], dtype=tf.int32), tf.transpose(self.y_single)))
+            tf.matmul(self.y_single, tf.ones([1, self.model_params.batch_size], dtype=tf.int32))
+            - tf.matmul(tf.ones([self.model_params.batch_size, 1], dtype=tf.int32), tf.transpose(self.y_single))
+        )
         mask = tf.to_float(tf.not_equal(mask_initial, tf.zeros_like(mask_initial)))
         masked_dissimilar_loss = tf.multiply(distance_map, mask)
         self.dissimilar_loss = tf.reduce_mean(tf.maximum(0., 0.1 * tf.ones_like(mask) - masked_dissimilar_loss))
@@ -87,10 +87,16 @@ class AdvCrossModalSimple(BaseModel):
         self.emb_v_class = self.domain_classifier(self.emb_v, self.l)
         self.emb_w_class = self.domain_classifier(self.emb_w, self.l, reuse=True)
 
-        all_emb_v = tf.concat([tf.ones([self.model_params.batch_size, 1]),
-                               tf.zeros([self.model_params.batch_size, 1])], 1)
-        all_emb_w = tf.concat([tf.zeros([self.model_params.batch_size, 1]),
-                               tf.ones([self.model_params.batch_size, 1])], 1)
+        all_emb_v = tf.concat(
+            [tf.ones([self.model_params.batch_size, 1]),
+             tf.zeros([self.model_params.batch_size, 1])],
+            1
+        )
+        all_emb_w = tf.concat(
+            [tf.zeros([self.model_params.batch_size, 1]),
+             tf.ones([self.model_params.batch_size, 1])],
+            1)
+
         self.domain_class_loss = tf.nn.softmax_cross_entropy_with_logits(logits=self.emb_v_class, labels=all_emb_w) + \
                                  tf.nn.softmax_cross_entropy_with_logits(logits=self.emb_w_class, labels=all_emb_v)
         self.domain_class_loss = tf.reduce_mean(self.domain_class_loss)
@@ -266,7 +272,7 @@ class AdvCrossModalSimple(BaseModel):
                 with open('./data/wikipedia_dataset/before_feats_transformed.pkl', 'wb') as f:
                     cPickle.dump(test_feats_trans, f, cPickle.HIGHEST_PROTOCOL)
                 # with open('./data/wiki_shallow/before_feats_transformed.pkl', 'wb') as f:
-                #    cPickle.dump(test_feats_trans, f, cPickle.HIGHEST_PROTOCOL)                
+                #    cPickle.dump(test_feats_trans, f, cPickle.HIGHEST_PROTOCOL)
                 print('dump before')
 
             p = float(epoch) / self.model_params.epoch
@@ -301,7 +307,7 @@ class AdvCrossModalSimple(BaseModel):
                         domain_loss_val, label_loss_val, similar_loss_val, dissimilar_loss_val
                     ))
             # if epoch == (self.model_params.epoch - 1):
-            #    self.emb_v_eval, self.emb_w_eval = sess.run([self.emb_v, self.emb_w],     
+            #    self.emb_v_eval, self.emb_w_eval = sess.run([self.emb_v, self.emb_w],
             #             feed_dict={
             #                 self.visual_feats: batch_feat,
             #                 self.word_vecs: batch_vec,
@@ -311,7 +317,7 @@ class AdvCrossModalSimple(BaseModel):
             #    with open('./data/wikipedia_dataset/train_img_emb.pkl', 'wb') as f:
             #        cPickle.dump(self.emb_v_eval, f, cPickle.HIGHEST_PROTOCOL)
             #    with open('./data/wikipedia_dataset/train_txt_emb.pkl', 'wb') as f:
-            #        cPickle.dump(self.emb_w_eval, f, cPickle.HIGHEST_PROTOCOL)                    
+            #        cPickle.dump(self.emb_w_eval, f, cPickle.HIGHEST_PROTOCOL)
 
     def eval_random_rank(self):
         start = time.time()
