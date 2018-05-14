@@ -64,19 +64,24 @@
         <div class="row">
             <div class="blog-masonry masonry-true">
                 {% for img in imgs %}
-                    <div class="post-masonry col-md-4 col-sm-6">
+                    <div class="post-masonry col-md-12 col-sm-12">
                         <div class="post-thumb">
-                            <img src="/static/wikipedia_images/{{ img["pic_id"] }}.jpg" alt="">
+                            <p style="color: black;margin: 20px;">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ img["texts"][:2500] + "..." }}</p>
+                            <br><br>
                             <div class="title-over">
                                 <h4><a href="/detail/{{ img["id"] }}">{{ img["name"] }}</a></h4>
                             </div>
-                            <a href="/detail/{{ img["id"] }}?rel={{ search_id }}&type=0" style="color: inherit;">
+                            <a href="/detail/{{ img["id"] }}?rel={{ query_txt }}&type=1" style="color: inherit;">
                                 <div class="post-hover text-center">
-                                    <div class="inside">
-                                        {#                                    <i class="fa fa-plus"></i>#}
-                                        <h4>{{ img["name"] }}</h4>
-                                        <p style="text-align: left;margin: 10px;">{{ img["texts"][:300] + "...." }}</p>
-                                        <span>Click to get more.</span>
+                                    <div class="inside text_box">
+                                        <img src="/static/wikipedia_images/{{ img["pic_id"] }}.jpg"
+                                             style="max-height: 250px;max-width: 300px;vertical-align:center;margin: auto"
+                                             alt="">
+                                        <div style="margin: auto;">
+                                            <i class="fa fa-eye"></i>
+                                            <span>Click to view picture.</span>
+                                        </div>
                                     </div>
                                 </div>
                             </a>
