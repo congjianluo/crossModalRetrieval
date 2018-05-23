@@ -70,9 +70,9 @@
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ img["texts"][:2500] + "..." }}</p>
                             <br><br>
                             <div class="title-over">
-                                <h4><a href="/detail/{{ img["id"] }}">{{ img["name"] }}</a></h4>
+                                <h4><a href="/detail/{{ img["id"] }}?rel={{ search_id }}&type=1">{{ img["name"] }}</a></h4>
                             </div>
-                            <a href="/detail/{{ img["id"] }}?rel={{ query_txt }}&type=1" style="color: inherit;">
+                            <a href="/detail/{{ img["id"] }}?rel={{ search_id }}&type=1" style="color: inherit;">
                                 <div class="post-hover text-center">
                                     <div class="inside text_box">
                                         <img src="/static/wikipedia_images/{{ img["pic_id"] }}.jpg"

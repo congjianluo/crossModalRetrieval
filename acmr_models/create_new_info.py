@@ -20,9 +20,9 @@ from scipy.misc.pilutil import imread, imresize
 from vgg_module import vgg16
 
 # from download import downloadvvvv
-import nltk
-nltk.download('averaged_perceptron_tagger')
-nltk.download('stopwords')
+# import nltk
+# nltk.download('averaged_perceptron_tagger')
+# nltk.download('stopwords')
 
 _perceptronTagger = PerceptronTagger()
 
@@ -68,11 +68,7 @@ def find_word_vecs(words, data_file):
 
 def extract_image_features(pic_name):
     imgs = tf.placeholder(tf.float32, [None, 224, 224, 3])
-    batch_size = 1
     filenames = []
-    # for dirname in ["art", "biology", "geography", "history", "literature", "media", "music", "royalty", "sport",
-    #                 "warfare"]:
-    #     filenames += glob_recursive('../wikipedia_dataset/images/' + dirname, '*.jpg')
 
     filenames += glob_recursive('./uploads/', pic_name + '.jpg')
 
@@ -83,24 +79,10 @@ def extract_image_features(pic_name):
 
         img_data = [imresize(imread(filename, mode='RGB'), (224, 224)) for filename in filenames]
         feats = sess.run(vgg.fc2, feed_dict={vgg.imgs: img_data})
-        # wikipedia_info = select_wikipedia_info_with_pic(splitext(basename(batch_filenames[ii]))[0])
         img_feats = feats[0]
-        # wikipedia_info.feats = feats[ii].tostring()  # np.fromstring(my_string, dtype=np.float)
-        # update_wikipedia_info(wikipedia_info)
         print('pic_feats finished in %4.4fs' % (time.time() - start))
 
-        # batch_filenames = filenames[num_batches * batch_size: len(filenames)]
-        # img_data = [imresize(imread(filename, mode='RGB'), (224, 224)) for filename in batch_filenames]
-        # feats = sess.run(vgg.fc2, feed_dict={vgg.imgs: img_data})
-        # for ii in range(len(batch_filenames)):
-        #     img_feats[splitext(basename(batch_filenames[ii]))[0]] = feats[ii]
-        #     wikipedia_info = select_wikipedia_info(splitext(basename(batch_filenames[ii]))[0])
-        #     wikipedia_info.feats = feats[ii].tostring()  # np.fromstring(a)
-        #     update_wikipedia_info(wikipedia_info)
-        # print('[%d/%d] - finished in %4.4fs' % (len(filenames), len(filenames), time.time() - start))
-        # img_feats_list = img_feats.values()
     cPickle.dump(img_feats, open('./acmr_models/feats/' + pic_name + '-feats.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
-    # cPickle.dump(img_feats_list, open('./data/wikipedia_dataset/img_feats_list_vgg16.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
     print('Finished')
 
 
@@ -131,52 +113,21 @@ def extract_words_from_xml(filename):
 
 
 def extract_text(input_text):
-    # # init_all_table()
-    # print('Extracting wiki text')
-    #
-    # all_xml_files = glob(os.path.join('../wikipedia_dataset/texts', '*.xml'))
-    # text_words_map = {}
-    # all_words = []
-    #
-    # # Extract all words and unique words
-    # start = time.time()
-    # i = 0
-    # for xml_filename in all_xml_files:
-    #     basename_without_ext = splitext(basename(xml_filename))[0]
-    #     tokens, texts, name, pic_id = extract_words_from_xml(xml_filename)
-    #     # create_new_img_inf(i, pic_id, basename_without_ext, name, texts, "", "", -1)
-    #     i += 1
-    #
-    #     text_words_map[basename_without_ext] = tokens
-    #     all_words += tokens
-    # unique_words = list(set(all_words))
-    # # cPickle.dump(unique_words, open('./data/wikipedia_dataset/unique_words.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
-    # print('Extracted %d unique words in %4.4fs' % (len(unique_words), time.time() - start))
-    # # cPickle.dump(text_words_map, open('./data/wikipedia_dataset/text_words_map.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
-    #
-    # # Build dictionary
-    # cPickle.dump(text_words_map, open('./images/text_words_map.pkl', 'wb'), cPickle.HIGHEST_PROTOCOL)
     text_words_map = cPickle.load(open('./acmr_models/images/all_text_words_map.pkl', 'rb'))
 
     dictionary = gensim.corpora.Dictionary(tokens for _, tokens in text_words_map.items())
     dictionary.filter_extremes(no_below=5, keep_n=5000)
     dictionary.compactify()
     tfidf = gensim.models.tfidfmodel.TfidfModel([tokens for _, tokens in text_words_map.items()], dictionary=dictionary)
-    # print('%s' % len(dictionary.keys()))
-    # print('%s' % len(text_words_map.keys()))
 
-    # Generate word vec representations
     chunksize = 5000
-    # print('Calculating vector representations')
     start = time.time()
-    # input_text = text_words_map["0b4ebd99673d910a6747df881d000dc1-9"]
     text = gensim.utils.to_unicode(input_text)
     text = gensim.utils.decode_htmlentities(text)
     text = text.replace('\n', ' ')
     tokens = tokenize(text)
     tokens = [word.encode('utf-8') for word in tokens]
     bow = np.zeros([len(dictionary.keys())])
-    # cnt_num = 0g
     for chunk in gensim.utils.chunkize(tokens, chunksize, maxsize=2):
         vec_list = dictionary.doc2bow(chunk)
         vec_list_tfidf = tfidf[vec_list]

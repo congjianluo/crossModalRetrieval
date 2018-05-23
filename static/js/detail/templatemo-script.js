@@ -57,6 +57,12 @@ jQuery(function ($) {
     });
 
     $(document).ready(function () {
+        function GetQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
 
         /* Handle site title click, hide nav, page content, remove # from URL
         ----------------------------------------------------------------------*/
@@ -87,8 +93,19 @@ jQuery(function ($) {
 
 
             if (currentPage === "#page-3") {
-                $(".js-site-title").click();
-                return ;
+                var id = GetQueryString("rel");
+                var type = GetQueryString("type");
+                if (type === "0") {
+                    window.location.href = "/txt2img_ret?query=" + id;
+                }
+                else {
+                    window.location.href = "/img2txt_ret?id=" + id;
+                }
+                return;
+            }
+
+            if (currentPage === "#page-4") {
+                window.location.href = "/";
             }
 
             // Change page content

@@ -33,21 +33,6 @@ def kNNClassify(newInput, dataSet, labels, k):
     # argsort() returns the indices that would sort an array in a ascending order
     sortedDistIndices = np.argsort(distance)
 
-    # LimitValue = 10
-    # sortedOrdered = [0 for i in range(LimitValue)]
-    # sortedOrderedValue = [max(sortedDistIndices) for i in range(LimitValue)]
-    #
-    # index = 0
-    # for item in sortedDistIndices:
-    #     for i in range(LimitValue):
-    #         if item < sortedOrderedValue[i]:
-    #             sortedOrderedValue[i] = item
-    #             sortedOrdered[i] = index
-    #             break
-    #     index += 1
-    #
-    # print(sortedOrdered)
-    # print(sortedOrderedValue)
     classCount = {}  # define a dictionary (can be append element)
     for i in xrange(k):
         ## step 3: choose the min k distance

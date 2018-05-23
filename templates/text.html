@@ -69,9 +69,9 @@
                         <div class="post-thumb">
                             <img src="/static/wikipedia_images/{{ img["pic_id"] }}.jpg" alt="">
                             <div class="title-over">
-                                <h4><a href="/detail/{{ img["id"] }}">{{ img["name"] }}</a></h4>
+                                <h4><a href="/detail/{{ img["id"] }}?rel={{ query_txt }}&type=0">{{ img["name"] }}</a></h4>
                             </div>
-                            <a href="/detail/{{ img["id"] }}?rel={{ search_id }}&type=0" style="color: inherit;">
+                            <a href="/detail/{{ img["id"] }}?rel={{ query_txt }}&type=0" style="color: inherit;">
                                 <div class="post-hover text-center">
                                     <div class="inside">
                                         {#                                    <i class="fa fa-plus"></i>#}
