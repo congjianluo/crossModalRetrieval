@@ -69,7 +69,10 @@ jQuery(function ($) {
         $(".js-site-title").click(function () {
             $('.js-nav').fadeToggle();
             $('.js-content-wrapper').fadeToggle();
-            history.pushState("", document.title, window.location.pathname);
+            // history.pushState("", document.title, window.location.pathname);
+            var currentImgSrc = $("img#page-3-img").attr('src');
+            console.log(currentImgSrc);
+            $.backstretch(currentImgSrc, {speed: 500});
             $('.js-footer').toggleClass("sticky");
         });
 
@@ -88,9 +91,10 @@ jQuery(function ($) {
             var currentItemNo = $(this).attr('data-nav-item-id');
             var currentPage = $(this).children("a").attr('href');
             var currentImgSrc = $("img" + currentPage + "-img").attr('src');
-            console.log(currentImgSrc);
-            $.backstretch(currentImgSrc, {speed: 500});
-
+            if(currentPage === "#page-1"|| currentPage==="#page-2") {
+                console.log("img" + currentPage + "-img");
+                $.backstretch(currentImgSrc, {speed: 500});
+            }
 
             if (currentPage === "#page-3") {
                 var id = GetQueryString("rel");
