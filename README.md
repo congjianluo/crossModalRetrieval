@@ -6,7 +6,11 @@ You can run this system:
  `python app.py`
 and the service will run on http://0.0.0.0:3000/.
 
-We have prepared the data in the "./data/allImage" folder. If you have any question, please contact me at llluocj@gmail.com. 
+These files may be helpful to you: https://drive.google.com/open?id=1kZgf7OrIaTqWahUFjajuFa_TZOd51q2e.
+
+If you want to know more detail of the ACMR, you can see this repo: https://github.com/sunpeng981712364/ACMR_demo, and ask the paper's author(csbkwang@gmail.com) directly.
+
+If you have any question about retriveal system, please contact me at llluocj@gmail.com. 
 
 The codes refer to the following papers: 
 
