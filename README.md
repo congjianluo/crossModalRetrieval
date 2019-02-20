@@ -8,10 +8,6 @@ and the service will run on http://0.0.0.0:3000/.
 
 These files may be helpful to you: https://drive.google.com/open?id=1kZgf7OrIaTqWahUFjajuFa_TZOd51q2e.
 
-If you want to know more detail of the ACMR, you can see this repo: https://github.com/sunpeng981712364/ACMR_demo, and ask the paper's author(csbkwang@gmail.com) directly.
-
-If you have any question about retriveal system, please contact me at llluocj@gmail.com. 
-
 The codes refer to the following papers: 
 
 [1]  Li He, Xing Xu, Huimin Lu, Yang Yang, Fumin Shen and Heng Tao Shen.  "Unsupervised Cross-modal Retrieval through Adversarial Learning". IEEE International Conference on Multimedia and Expo (ICME), 2017. 
