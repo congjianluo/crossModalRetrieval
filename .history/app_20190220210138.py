@@ -17,7 +17,7 @@ from acmr_models.train_adv_crossmodal_simple_wiki import run_acmr
 sqlite_path = os.path.dirname(os.path.realpath(__file__))
 print "current_dir : " + sqlite_path
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + sqlite_path + '/wikipedia.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + sqlite_path + '/wikipedia.db'
 app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', True)
 db.init_app(app)
 
