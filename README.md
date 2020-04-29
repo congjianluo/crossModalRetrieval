@@ -1,6 +1,8 @@
 # A demo of a cross-modal retrieval system
 
-This is a corss-modal retrieval system by using Flask, which is a microframework for Python.And I will keep updating it.
+![demo.png](./static/images/demo.png)
+
+This is a corss-modal retrieval system by using Flask, which is a microframework for Python.
 
 You can run this system:
  `python app.py`
@@ -15,3 +17,6 @@ The codes refer to the following papers:
 [2]  Bokun Wang, Yang Yang, Xing Xu, Alan Hanjalic, and Heng Tao Shen. "Adversarial Cross-Modal Retrieval". In Proceedings of 25th ACM International Conference on Multimedia (ACM MM), 2017.
 
 [3]  Yahui Xu, Yang Yang, Fumin Shen, Yuxuan Zhou, Xing Xu and Heng Tao Shen. " Attribute Hashing for Zero-Shot Image Retrieval". IEEE International Conference on Multimedia and Expo  (ICME), 2017.
+
+
+
